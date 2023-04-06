@@ -1,6 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { user_login } from './user_api'
+import { _store_data, _retrieve_data } from './storage_handler'
 export default function Login() {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
@@ -10,8 +11,9 @@ export default function Login() {
         email:username,
         password:password
     }).then((result) => {
-        console.log(result.data);
         if(result.status == 200 ) {
+            const value = JSON.stringify(result.data)
+            _store_data('data', value)
             alert(result.data.message)
         }else{
             alert(result.message)
