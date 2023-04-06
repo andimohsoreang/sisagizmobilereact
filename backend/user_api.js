@@ -22,15 +22,12 @@ const user_calculator = async data => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            data: {
-                age: data.age,
-                bb: data.bb,
-                tb: data.tb,
-                jk: data.jk
+            params: {
+                data: data
             }
         })
         return result
-    }catch(error){
+    } catch(error) {
         return error.response.data
     }
 }

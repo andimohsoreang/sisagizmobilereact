@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Login from './backend/login'
-import Measurment from './backend/measurment'
+import Calculator from './backend/calculator'
 export default function App() {
   return (
     <View>
@@ -9,7 +9,7 @@ export default function App() {
         <Login />
       </View>
       <View>
-        <Measurment />
+        <Calculator />
       </View>
     </View>
   )
