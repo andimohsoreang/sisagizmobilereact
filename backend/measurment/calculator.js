@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
-import { user_calculator } from '../api/user_api'
+import { user_calculator } from '../api/all_api'
 export default function Calculator() {
     const [AGE, setAge] = React.useState(11)
     const [BB, setBB] = React.useState(8)
@@ -22,7 +22,6 @@ export default function Calculator() {
             alert(err)
         })
     }
-
   return (
     <View style={{marginTop:50}}>
         <TextInput 
@@ -54,7 +53,6 @@ export default function Calculator() {
             placeholder='Jenis Kelamin'
             onChangeText={setJK}
             value={JK}
-
         />
         <TouchableOpacity style={{alignSelf:'center'}} onPress={calculator}>
             <Text>Measurment</Text>
