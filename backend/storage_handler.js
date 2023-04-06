@@ -18,4 +18,4 @@ const _retrieve_data = async key => {
     }
 } 
 
-export {_store_data, _retrieve_data}
+export {_store_data, _retrieve_data }
