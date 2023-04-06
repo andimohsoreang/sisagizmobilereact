@@ -12,9 +12,9 @@ export default function Login() {
     }).then((result) => {
         console.log(result.data);
         if(result.status == 200 ) {
-            alert(result.data.status)
+            alert(result.data.message)
         }else{
-            alert(result.status)
+            alert(result.message)
         }
     }).catch(err => {
         alert(err)

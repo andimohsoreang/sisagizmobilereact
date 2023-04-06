@@ -5,7 +5,12 @@ import Measurment from './backend/measurment'
 export default function App() {
   return (
     <View>
-      <Login />
+      <View>
+        <Login />
+      </View>
+      <View>
+        <Measurment />
+      </View>
     </View>
   )
 }

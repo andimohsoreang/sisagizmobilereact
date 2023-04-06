@@ -20,9 +20,14 @@ const user_calculator = async data => {
         const result = await ApiManager('calculator', {
             method: 'GET',
             headers: {
-                "Content-Type": 'application/json'
+                'Content-Type': 'application/json'
             },
-            data: data
+            data: {
+                age: data.age,
+                bb: data.bb,
+                tb: data.tb,
+                jk: data.jk
+            }
         })
         return result
     }catch(error){
