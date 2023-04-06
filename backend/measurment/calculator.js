@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
-import { user_calculator } from './user_api'
+import { user_calculator } from '../api/user_api'
 export default function Calculator() {
     const [AGE, setAge] = React.useState(11)
     const [BB, setBB] = React.useState(8)

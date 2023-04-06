@@ -1,7 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { user_login } from './user_api'
-import { _store_data, _retrieve_data } from './storage_handler'
+import { user_login } from '../api/user_api'
+import { _store_data, _retrieve_data } from '../handler/storage_handler'
 export default function Login() {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
