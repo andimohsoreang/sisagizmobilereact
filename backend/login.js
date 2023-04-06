@@ -2,16 +2,17 @@ import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } fro
 import React from 'react'
 import { user_login } from './user_api'
 export default function Login() {
-  const [username, getUsername] = React.useState('')
-  const [password, getPassword] = React.useState('')
+  const [username, setUsername] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [msg, setMsg] = React.useState('')
   const login = () => {
     user_login({
         email:username,
         password:password
     }).then((result) => {
-        console.log(result);
+        console.log(result.data);
         if(result.status == 200 ) {
-            alert(result.status)
+            alert(result.data.status)
         }else{
             alert(result.status)
         }
@@ -25,13 +26,13 @@ export default function Login() {
           <TextInput
               style={styles.input}
               placeholder='username'
-              onChangeText={getUsername}
+              onChangeText={setUsername}
               value={username}
           />
           <TextInput
               style={styles.input}
               placeholder='password'
-              onChangeText={getPassword}
+              onChangeText={setPassword}
               value={password}
           />
           <TouchableOpacity style={{alignSelf:'center'}} onPress={login}>
@@ -40,9 +41,6 @@ export default function Login() {
       </View>
   )
 }
-
-
-
 
 const styles = StyleSheet.create({
     input: {
