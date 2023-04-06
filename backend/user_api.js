@@ -23,7 +23,10 @@ const user_calculator = async data => {
                 'Content-Type': 'application/json'
             },
             params: {
-                data: data
+                age: data.age,
+                bb: data.bb,
+                tb: data.tb,
+                jk: data.jk
             }
         })
         return result

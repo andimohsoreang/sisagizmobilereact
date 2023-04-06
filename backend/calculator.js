@@ -2,10 +2,10 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-nativ
 import React from 'react'
 import { user_calculator } from './user_api'
 export default function Calculator() {
-    const [AGE, setAge] = React.useState(0)
-    const [BB, setBB] = React.useState(0)
-    const [TB, setTB] = React.useState(0)
-    const [JK, setJK] = React.useState('P')
+    const [AGE, setAge] = React.useState(11)
+    const [BB, setBB] = React.useState(8)
+    const [TB, setTB] = React.useState(69)
+    const [JK, setJK] = React.useState('L')
     const calculator = () => {
         user_calculator({
             age:Number(AGE),
