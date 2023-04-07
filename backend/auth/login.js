@@ -2,18 +2,22 @@ import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } fro
 import React from 'react'
 import { user_login } from '../api/all_api'
 import { _store_data, _retrieve_data } from '../handler/storage_handler'
+import { AsyncStorage } from 'AsyncStorage'
 export default function Login() {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
-  const [msg, setMsg] = React.useState('')
+
+  const [token, setToken] = React.useState('')
+
+
   const login = () => {
     user_login({
         email:username,
         password:password
     }).then((result) => {
         if(result.status == 200 ) {
-            const value = JSON.stringify(result.data)
-            _store_data('data', value)
+            _store_data('data', result.data)
+            _retrieve_data('data').then((data) => console.log({data}))
             alert(result.data.message)
         }else{
             alert(result.message)

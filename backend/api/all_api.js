@@ -1,4 +1,5 @@
 import ApiManager from "./api";
+import { _store_data, _retrieve_data } from "../handler/storage_handler";
 
 const user_login = async data => {
     try {
@@ -53,7 +54,7 @@ const user_accumulation_report = async data => {
     }
 }
 
-const user_mesurmet = async data => {
+const user_measurmet = async data => {
     try {
         const result = await ApiManager('', {
             method: 'GET',
@@ -222,4 +223,18 @@ const get_posyanduBy_uuid = async data => {
 }
 
 
-export { user_login, user_calculator}
+export {
+        user_login,
+        user_calculator,
+        user_accumulation_report,
+        user_measurmet,
+        user_measurmentBy_uuid,
+        user_measurment_report,
+        get_growthBy_uuid,
+        get_articleBy_category,
+        get_articleBy_uuid,
+        get_puskesmas,
+        get_puskesmasBy_uuid,
+        get_posyandu,
+        get_posyanduBy_uuid    
+    }
