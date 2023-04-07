@@ -17,7 +17,7 @@ export default function Login() {
     }).then((result) => {
         if(result.status == 200 ) {
             _store_data('data', result.data)
-            _retrieve_data('data').then((data) => console.log({data}))
+            _retrieve_data('data').then((data) => console.log(data))
             alert(result.data.message)
         }else{
             alert(result.message)
