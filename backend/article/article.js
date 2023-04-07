@@ -21,7 +21,13 @@ export default function Article() {
                 const articleData = result.data.data;
                 for (let i = 0; i < index; i++) {
                   articleItems.push({
-                    uri: articleData[i].url
+                    category: articleData[i].category,
+                    uri: articleData[i].url,
+                    createdAt: articleData[i].createdAt,
+                    uuid: articleData[i].uuid,
+                    title: articleData[i].title,
+                    body: articleData[i].body
+
                   });
                 }
                 setArticleData(articleItems);
@@ -40,11 +46,22 @@ export default function Article() {
               <ActivityIndicator />
             ) : (
               articleData.map((image, index) => (
-                <Image
-                  key={index}
-                  style={styles.logo}
-                  source={{ uri: image.uri }}
-                />
+                <View>
+                    <View>
+                    <Image
+                    key={index}
+                    style={styles.logo}
+                    source={{ uri: image.uri }}
+                    />
+                    </View>
+                    <View>
+                        <Text>{image.title}</Text>
+                    </View>
+                    <View>
+                        <Text>{image.createdAt}</Text>
+                    </View>
+                </View>
+
               ))
             )}
           </View>
