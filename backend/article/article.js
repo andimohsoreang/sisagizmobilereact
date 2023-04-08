@@ -22,7 +22,7 @@ export default function Article() {
                 for (let i = 0; i < index; i++) {
                   articleItems.push({
                     category: articleData[i].category,
-                    uri: articleData[i].url,
+                    url: articleData[i].url,
                     createdAt: articleData[i].createdAt,
                     uuid: articleData[i].uuid,
                     title: articleData[i].title,
@@ -51,7 +51,7 @@ export default function Article() {
                     <Image
                     key={index}
                     style={styles.logo}
-                    source={{ uri: image.uri }}
+                    source={{ uri: image.url }}
                     />
                     </View>
                     <View>
