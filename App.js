@@ -1,16 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Login from './backend/auth/login';
-import Calculator from './backend/measurment/calculator';
-import Accumulation_report from './backend/report/accumulation_report';
-import LoginScreen from './screens/Login';
+import Login from './backend/auth/login'
+import Calculator from './backend/measurment/calculator'
+import Accumulation_report from './backend/report/accumulation_report'
+import Article from './backend/article/article'
 export default function App() {
 
 
   return (
-    <View>
-      <LoginScreen />
-    </View>
+    <ScrollView>
+      <View>
+        <Login />
+      </View>
+      <View>
+        <Calculator />
+      </View>
+      <View>
+        <Accumulation_report /> 
+      </View>
+      <View>
+        <Article />
+      </View>
+    </ScrollView>
   )
 }
 

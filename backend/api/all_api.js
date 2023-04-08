@@ -2,6 +2,7 @@ import ApiManager from "./api";
 import { _store_data, _retrieve_data } from "../handler/storage_handler";
 
 const user_login = async data => {
+
     try {
         const result = await ApiManager('login',{
             method: 'POST',
@@ -15,6 +16,8 @@ const user_login = async data => {
         return error.response.data
     }
 }
+
+
 
 const user_calculator = async data => {
     try {
@@ -37,6 +40,7 @@ const user_calculator = async data => {
 }
 
 const user_accumulation_report = async data => {
+    
     try {
         const result = await ApiManager('accumulation-repor', {
             method: 'GET',
@@ -221,7 +225,6 @@ const get_posyanduBy_uuid = async data => {
         return error.response.data
     }
 }
-
 
 export {
         user_login,
