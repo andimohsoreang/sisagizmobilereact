@@ -17,13 +17,14 @@ const user_login = async data => {
     }
 }
 
-const post_measurment = async data => {
+const post_measurment = async (token, data) => {
 
     try {
         const result = await ApiManager('measurement',{
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Baerer ${token}`
             },
             data: data
         })
@@ -254,5 +255,6 @@ export {
         get_puskesmas,
         get_puskesmasBy_uuid,
         get_posyandu,
-        get_posyanduBy_uuid    
+        get_posyanduBy_uuid,
+        post_measurment    
     }

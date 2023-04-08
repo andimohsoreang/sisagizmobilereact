@@ -8,13 +8,20 @@ import PetugasLogin from './screens/PetugasLogin'
 import MainHomePosyandu from './screens/posyandu/home/main_home';
 import LoginScreenPetugas from './screens/PetugasLogin'
 import LoginScreenUser from './screens/Login'
+import Measurment from './backend/measurment/measurment'
 export default function App() {
 
 
   return (
-    <View>
-      <LoginScreenUser />
-    </View>
+    <ScrollView>
+      <View>
+        <LoginScreenUser />
+
+      </View>
+      <View>
+        <Measurment />
+      </View>
+    </ScrollView>
   )
 }
 
