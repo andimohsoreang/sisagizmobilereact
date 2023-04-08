@@ -5,13 +5,15 @@ import Calculator from './backend/measurment/calculator'
 import Accumulation_report from './backend/report/accumulation_report'
 import Article from './backend/article/article'
 import PetugasLogin from './screens/PetugasLogin'
-import MainHomePosyandu from './screens/posyandu/home/index';
+import MainHomePosyandu from './screens/posyandu/home/main_home';
+import LoginScreenPetugas from './screens/PetugasLogin'
+import LoginScreenUser from './screens/Login'
 export default function App() {
 
 
   return (
     <View>
-      <MainHomePosyandu />
+      <LoginScreenUser />
     </View>
   )
 }

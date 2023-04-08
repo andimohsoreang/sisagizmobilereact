@@ -2,7 +2,7 @@
 import React from 'react';
 import useFonts from 'expo-font'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
-import styleFonts from './../../fonts';
+import styleFonts from '../../fonts';
 
 export default function MainHomePosyandu() {
 

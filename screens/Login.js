@@ -1,8 +1,42 @@
 import {useFonts} from 'expo-font'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
+import React from 'react'
+import { Login } from '../backend/auth/login'
+import { _store_data } from '../backend/handler/storage_handler'
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Entypo } from '@expo/vector-icons';
+import { ActivityIndicator } from 'react-native'
 
-export default function LoginScreen() {
+
+
+export default function LoginScreenUser() {
+  const [username, setUsername] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [hide, setHide] = React.useState(true)
+  const [isData, setIsData] = React.useState(true)
+
+  const hide_password = () => {
+    setHide(!hide)
+  }
+
+  const login_check = async () => {
+    setIsData(false)
+    try {
+      let result = await Login(username, password);
   
+      if (result.status === 200) {
+        _store_data('data', result.data);
+        console.log(result.data);
+        alert(result.data.message);
+        setIsData(true)
+      } else {
+        alert(result.message);
+        setIsData(true)
+      }
+    } catch (err) {
+      alert(err);
+    }
+  };
 
     const [fontsLoaded] = useFonts({
         PopBold : require('../assets/fonts/Poppins-Bold.ttf'),
@@ -25,18 +59,47 @@ export default function LoginScreen() {
           </Text>
         </View>
         <View>
-          <TextInput style={styles.textInput} placeholder="Username" />
-          <TextInput style={styles.textInput1} placeholder="Password" />
+          <TextInput style={styles.textInput} placeholder="Username"
+            onChangeText={setUsername}
+            value={username}
+          />
+          <TextInput style={styles.textInput1} placeholder="Password"
+            secureTextEntry={hide}
+            inlineImageLeft= 'search_icon'
+            onChangeText={setPassword}
+            value={password}
+          />
+          <TouchableOpacity style={styles.hide} onPress={hide_password}>
+          {hide ? (
+            <Entypo name="eye-with-line" size={24} color="black" />
+          ):
+          (
+            <Entypo name="eye" size={24} color="black" />
+          )
+          }
+        </TouchableOpacity>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={login_check}>
             <View style={styles.btn}>
                 <Text style={styles.loginbtn}>Login</Text>
             </View>
+            {isData?
+            (
+              <Text></Text>
+            )
+            :
+            (
+              <ActivityIndicator style={{marginTop:25}}/>
+            )}
         </TouchableOpacity>
       </View>
     );
 }
 const styles = StyleSheet.create({
+  hide: {
+    marginTop: -32,
+    marginLeft: 320
+  },  
   container: {
     flexDirection: "column",
   },

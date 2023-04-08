@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function LoginScreen() {
+export default function LoginScreenPetugas() {
   const [fontsLoaded] = useFonts({
     PopBold: require("../assets/fonts/Poppins-Bold.ttf"),
     PopLug: require("../assets/fonts/Poppins-Light.ttf"),
