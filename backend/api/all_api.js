@@ -17,7 +17,21 @@ const user_login = async data => {
     }
 }
 
+const post_measurment = async data => {
 
+    try {
+        const result = await ApiManager('measurement',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        })
+        return result
+    }catch(error){
+        return error.response.data
+    }
+}
 
 const user_calculator = async data => {
     try {
@@ -39,13 +53,13 @@ const user_calculator = async data => {
     }
 }
 
-const user_accumulation_report = async data => {
-    
+    const user_accumulation_report = async (token, data) => {
     try {
-        const result = await ApiManager('accumulation-repor', {
+        const result = await ApiManager('accumulation-report', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Baerer ${token}`
             },
             params: {
                 mm: data.mm,
@@ -91,12 +105,13 @@ const user_measurmentBy_uuid = async data => {
     }
 }
 
-const user_measurment_report = async data => {
+const user_measurment_report = async (token, data) => {
     try {
         const result = await ApiManager('accumulation-repor', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             params: {
                 yyyy: data.yyyy

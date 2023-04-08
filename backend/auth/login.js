@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { user_login } from '../api/all_api'
+import { user_accumulation_report, user_login } from '../api/all_api'
 import { _store_data, _retrieve_data } from '../handler/storage_handler'
 import { AsyncStorage } from 'AsyncStorage'
 export default function Login() {
@@ -16,8 +16,8 @@ export default function Login() {
         password:password
     }).then((result) => {
         if(result.status == 200 ) {
+            alert(result.data.message)
             _store_data('data', result.data)
-            _retrieve_data('data').then((data) => console.log(data))
             alert(result.data.message)
         }else{
             alert(result.message)
@@ -47,7 +47,6 @@ export default function Login() {
       </View>
   )
 }
-
 const styles = StyleSheet.create({
     input: {
         height:40,
