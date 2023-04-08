@@ -4,24 +4,15 @@ import Login from './backend/auth/login'
 import Calculator from './backend/measurment/calculator'
 import Accumulation_report from './backend/report/accumulation_report'
 import Article from './backend/article/article'
+import PetugasLogin from './screens/PetugasLogin'
+import MainHomePosyandu from './screens/posyandu/home/index';
 export default function App() {
 
 
   return (
-    <ScrollView>
-      <View>
-        <Login />
-      </View>
-      <View>
-        <Calculator />
-      </View>
-      <View>
-        <Accumulation_report /> 
-      </View>
-      <View>
-        <Article />
-      </View>
-    </ScrollView>
+    <View>
+      <MainHomePosyandu />
+    </View>
   )
 }
 
