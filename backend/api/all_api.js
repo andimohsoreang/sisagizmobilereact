@@ -27,7 +27,6 @@ const post_measurment = async (token, data) => {
             },
             data: data
         })
-        console.log('disini');
         return result
     }catch(error){
         return error.response.data
@@ -89,12 +88,13 @@ const user_calculator = async data => {
     }
 }
 
-const user_measurmet = async data => {
+const user_measurmet = async (token, data) => {
     try {
-        const result = await ApiManager('', {
+        const result = await ApiManager('measurement', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             params: {
             }
@@ -113,6 +113,9 @@ const user_measurmentBy_uuid = async (token, data) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
+            params: {
+
+            }
         })
         return result
     } catch(error) {

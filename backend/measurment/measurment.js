@@ -1,12 +1,11 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { _retrieve_data } from '../handler/storage_handler'
-import { post_measurment, user_measurmentBy_uuid } from '../api/all_api'
+import { post_measurment, user_measurmentBy_uuid, user_measurmet } from '../api/all_api'
 import SelectDropdown from 'react-native-select-dropdown'
 
 export default function Measurment() {
     const [uuid, setuuid] = React.useState('')
-    const [date, setDate] = React.useState('')
     const [age, setAge] = React.useState(3)
     const [bb, setBB] = React.useState(2.9)
     const [tb, setTB] = React.useState(70)
@@ -16,11 +15,20 @@ export default function Measurment() {
     const [lika, setLika] = React.useState(4)
     const [dataBayi, setDataBayi] = React.useState([])
     const [doSubmit, setDoSubmit] = React.useState(false)
+    const [hasil, setHasil] = React.useState([])
+    const [hasilTerbaru, setHasilTerbaru] = React.useState([])
+    const [token, setToken] = React.useState('')
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ("0" + currentDate.getDate()).slice(-2);
+    const [date, setDate] = React.useState(`${year}-${month}-${day}`)
+
     const SetData = () => {
         const dt = []
         _retrieve_data('bayi').then((data) => {
             data.result.map((value) => {
-                if(value.posyandu == 'Rajawali II'){
+                if(value.posyandu == 'hilang'){
                     dt.push(value)
                 }
             })
@@ -28,44 +36,50 @@ export default function Measurment() {
         })
     }
     SetData()
-
-    const Submit = () => {
-        setDoSubmit(true)
-        console.log('Disini');
-        _retrieve_data('data').then((data) => {
-            post_measurment( data.jwt.token ,{
+    const Submit = async () => {
+        try {
+          const data = await _retrieve_data('data');
+          console.log(uuid);
+          const result = await post_measurment(data.jwt.token, {
             uuid: uuid,
-            date: '2023-05-06',
+            date: '2027-03-10',
             age: Number(age),
             bb: Number(bb),
             tb: Number(tb),
             method: method,
             vitamin: vitamin,
             lila: Number(lila),
-            lika: Number(lika)
-        }).then((result) => {
-            if(result.status == 200){
-                console.log(result);
-                user_measurmentBy_uuid(data.jwt.token, {
-                    uuid:uuid
-                }).then((result) => {
-                    if(result.status == 200){
-                        alert(result.data.message)
-                        setDoSubmit(true)
+            lika: Number(lika),
+          });
+      
+          if (result.status === 201) {
+            console.log('berhasil');
+            Hasil_Pengukuran()
+            setDoSubmit(true)
 
-                    }else{
-                        alert(result.message)
-                    }
-                }).catch(err => {
-                    alert(err.message)
-                })
+          } else {
+            console.log(result);
+            alert(result.message);
+          }
+        } catch (err) {
+          alert(err);
+        }
+      }
+
+    const Hasil_Pengukuran = async() => {
+        try{
+            const data = await _retrieve_data('data');
+            const result = await user_measurmet(data.jwt.token, {})
+            if(result.status === 200){
+                console.log('disini');
+                console.log(result);
+                console.log(result.data);
             }else{
                 alert(result.message)
             }
-        }).catch(err => {
+        }catch(err){
             alert(err)
-        })
-    })
+        }
     }
   return (
     <View>      
@@ -83,11 +97,12 @@ export default function Measurment() {
             <View>
                 {doSubmit? 
                 (
-                    <Text>INI</Text>
-                ): 
+                    <Text></Text>
+                ) 
+                : 
                 (
                     <View>
-                    <TextInput 
+                        <TextInput 
                     style={styles.input}
                     keyboardType='numeric'
                     placeholder='Umur'
@@ -141,8 +156,10 @@ export default function Measurment() {
                     <Text>Submit</Text>
                 </TouchableOpacity>
                 </View>
-                )}
-            </View>
+
+)}
+</View>
+                    
         ) : (
             <Text>Pilih Bayi Terlebih Dahulu</Text>
         )}
