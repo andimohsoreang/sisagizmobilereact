@@ -9,6 +9,11 @@ import HomeScreen from './screens/Home/HomeScreen';
 import { Feather } from "@expo/vector-icons";
 import MeasurementPage from './screens/Measure/MeasurementPage'
 import Splash from './screens/Splash/Splash'
+import Calculator from './backend/measurment/calculator';
+import MeasurementPosyandu from './screens/Measure/MeasurementPosyandu';
+import CalcRes from './screens/Measure/res/CalcRes'
+import MeasureRes from './screens/Measure/res/MeasureRes'
+import PetugasLogin from './screens/PetugasLogin'
 
 export default function App() {
 
@@ -34,8 +39,8 @@ function MyTabs() {
         component={HomeScreen}
       />
       <Tab.Screen
-        name="Measurements"
-        component={MeasurementPage}
+        name="Pengukuran"
+        component={PetugasLogin}
         options={{
           tabBarIcon: (props) => (
             <Feather name="aperture" size={24} color="black" />
@@ -78,13 +83,28 @@ function MyTabs() {
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Splash"
-          component={Splash}
+          name="MeasurementPage"
+          component={MeasurementPage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="MeasurementPosyandu"
+          component={MeasurementPosyandu}
         />
         <Stack.Screen
           options={{ headerShown: false }}
           name="Home"
           component={MyTabs}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="CalcRes"
+          component={CalcRes}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="MeasureRes"
+          component={MeasureRes}
         />
         <Stack.Screen name="Article" component={Article} />
       </Stack.Navigator>

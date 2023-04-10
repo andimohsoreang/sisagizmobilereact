@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function LoginScreenPetugas() {
+export default function LoginScreenPetugas(props) {
   const [fontsLoaded] = useFonts({
     PopBold: require("../assets/fonts/Poppins-Bold.ttf"),
     PopLug: require("../assets/fonts/Poppins-Light.ttf"),
@@ -28,7 +28,9 @@ export default function LoginScreenPetugas() {
         <TextInput style={styles.textInput} placeholder="Username" />
         <TextInput style={styles.textInput1} placeholder="Password" />
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=> {
+        props.navigation.navigate('MeasurementPosyandu')
+      }}>
         <View style={styles.btn}>
           <Text style={styles.loginbtn}>Login </Text>
         </View>

@@ -1,7 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { user_calculator } from '../api/all_api'
+import SelectDropdown from 'react-native-select-dropdown'
+import { useFonts } from "expo-font";
+import { Feather } from "@expo/vector-icons";
 export default function Calculator() {
+    
+    const [fontsLoaded] = useFonts({
+      PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+      PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
+      PopMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+      PopRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+      PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
+    });
+
+    if (!fontsLoaded) return null;
+    
     const [AGE, setAge] = React.useState(11)
     const [BB, setBB] = React.useState(8)
     const [TB, setTB] = React.useState(69)
@@ -134,12 +148,13 @@ export default function Calculator() {
             value={String(TB)}
 
         />
-        <TextInput 
-            style={styles.input}
-            placeholder='Jenis Kelamin'
-            onChangeText={setJK}
-            value={JK}
-        />
+        <SelectDropdown 
+                defaultValueByIndex={0}
+                data={['Laki-laki', 'Perempuan']}
+                onSelect={(selectedItem, index) => {
+                    setJK(index == 0? ('L') : ('P'))
+                }}
+            />
         <TouchableOpacity style={{alignSelf:'center'}} onPress={Submit}>
             <Text>Measurment</Text>
           </TouchableOpacity>

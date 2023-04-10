@@ -1,10 +1,11 @@
 import { TouchableOpacity,StyleSheet, Text, View, ScrollView } from 'react-native'
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
+import Measurment from '../../backend/measurment/measurment';
 
 
 
-export default function HomeScreen() {
+export default function HomeScreen(props) {
 
 
    const [fontsLoaded] = useFonts({
@@ -39,10 +40,15 @@ export default function HomeScreen() {
           <Text style={styles.menuText}>Menu</Text>
           <View style={{ pading: 10 }}>
             <View style={styles.containerMenu}>
-              <TouchableOpacity style={styles.menu1}>
+              <TouchableOpacity style={styles.menu1} onPress={()=> {
+                props.navigation.navigate("Pengukuran");
+              }}>
                 <Text>Menu 1</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu2}>
+              <TouchableOpacity style={styles.menu2} onPress={()=> {
+          props.navigation.navigate("MeasurementPage");
+    
+              }} >
                 <Text>Menu 1</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menu3}>

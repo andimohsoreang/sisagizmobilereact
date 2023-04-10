@@ -226,12 +226,13 @@ const get_puskesmasBy_uuid = async data => {
     }
 }
 
-const get_posyandu = async data => {
+const get_posyandu = async (token, data) => {
     try {
         const result = await ApiManager('posyandu', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             params: {
             }
