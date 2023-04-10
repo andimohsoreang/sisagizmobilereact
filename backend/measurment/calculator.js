@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { user_calculator } from '../api/all_api'
+import SelectDropdown from 'react-native-select-dropdown'
 export default function Calculator() {
     const [AGE, setAge] = React.useState(11)
     const [BB, setBB] = React.useState(8)
@@ -134,12 +135,13 @@ export default function Calculator() {
             value={String(TB)}
 
         />
-        <TextInput 
-            style={styles.input}
-            placeholder='Jenis Kelamin'
-            onChangeText={setJK}
-            value={JK}
-        />
+        <SelectDropdown 
+                defaultValueByIndex={0}
+                data={[Laki-laki, Perempuan]}
+                onSelect={(selectedItem, index) => {
+                    setJK(index == 0? ('L') : ('P'))
+                }}
+            />
         <TouchableOpacity style={{alignSelf:'center'}} onPress={Submit}>
             <Text>Measurment</Text>
           </TouchableOpacity>
