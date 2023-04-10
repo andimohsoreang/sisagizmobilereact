@@ -42,7 +42,7 @@ export default function Measurment() {
           console.log(uuid);
           const result = await post_measurment(data.jwt.token, {
             uuid: uuid,
-            date: '2027-03-10',
+            date: '2027-04-10',
             age: Number(age),
             bb: Number(bb),
             tb: Number(tb),
@@ -56,9 +56,7 @@ export default function Measurment() {
             console.log('berhasil');
             Hasil_Pengukuran()
             setDoSubmit(true)
-
           } else {
-            console.log(result);
             alert(result.message);
           }
         } catch (err) {
@@ -71,9 +69,7 @@ export default function Measurment() {
             const data = await _retrieve_data('data');
             const result = await user_measurmet(data.jwt.token, {})
             if(result.status === 200){
-                console.log('disini');
-                console.log(result);
-                console.log(result.data);
+                setHasil(result.data)
             }else{
                 alert(result.message)
             }
@@ -88,6 +84,7 @@ export default function Measurment() {
                 defaultButtonText='Pilih Bayi'
                 data={dataBayi.map((value) => {return value.name})}
                 onSelect={(selectedItem, index) => {
+                    console.log(hasil);
                     setuuid(dataBayi[index].uuid)
                     setDoSubmit(false)
                 }}
