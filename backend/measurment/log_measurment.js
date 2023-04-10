@@ -9,8 +9,8 @@ export default function Log_Measurment() {
     const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const day = ("0" + currentDate.getDate()).slice(-2);
     const [date, setDate] = React.useState(`${year}-${month}-${day}`)
-    const [isLoaded, setIsLoaded] = React.useState(false); // menambahkan variabel isLoaded
-    const [refreshing, setRefreshing] = React.useState(false); // menambahkan variabel refreshing
+    const [isLoaded, setIsLoaded] = React.useState(false); 
+    const [refreshing, setRefreshing] = React.useState(false); 
 
     useEffect(() => {
         const setHasil = async () => {
@@ -21,8 +21,8 @@ export default function Log_Measurment() {
                         if (data.data[i].Toddler.uuid === UUID) {
                             if (data.data[i].date === date) {
                                 setDt(data.data[i])
-                                setIsLoaded(true); // mengubah variabel isLoaded menjadi true setelah data tersedia
-                                setRefreshing(false); // mengubah variabel refreshing menjadi false setelah data tersedia
+                                setIsLoaded(true); 
+                                setRefreshing(false); 
                             }
                         }
                     }
@@ -35,9 +35,9 @@ export default function Log_Measurment() {
     }, [])
 
     const onRefresh = React.useCallback(() => {
-        setRefreshing(true); // mengubah variabel refreshing menjadi true ketika user melakukan pull-to-refresh
-        setIsLoaded(false); // mengubah variabel isLoaded menjadi false ketika user melakukan pull-to-refresh
-        setDt({}); // mengosongkan data ketika user melakukan pull-to-refresh
+        setRefreshing(true); 
+        setIsLoaded(false); 
+        setDt({}); 
         const setHasil = async () => {
             try {
                 const UUID = await _retrieve_data('UUID')
@@ -46,8 +46,8 @@ export default function Log_Measurment() {
                         if (data.data[i].Toddler.uuid === UUID) {
                             if (data.data[i].date === date) {
                                 setDt(data.data[i])
-                                setIsLoaded(true); // mengubah variabel isLoaded menjadi true setelah data tersedia
-                                setRefreshing(false); // mengubah variabel refreshing menjadi false setelah data tersedia
+                                setIsLoaded(true); 
+                                setRefreshing(false); 
                             }
                         }
                     }
