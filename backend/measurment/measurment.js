@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { _retrieve_data } from '../handler/storage_handler'
+import { _retrieve_data, _store_data } from '../handler/storage_handler'
 import { post_measurment, user_measurmentBy_uuid, user_measurmet } from '../api/all_api'
 import SelectDropdown from 'react-native-select-dropdown'
+import { ActivityIndicator } from 'react-native'
 
 export default function Measurment() {
     const [uuid, setuuid] = React.useState('')
@@ -15,14 +16,12 @@ export default function Measurment() {
     const [lika, setLika] = React.useState(4)
     const [dataBayi, setDataBayi] = React.useState([])
     const [doSubmit, setDoSubmit] = React.useState(false)
-    const [hasil, setHasil] = React.useState([])
-    const [hasilTerbaru, setHasilTerbaru] = React.useState([])
-    const [token, setToken] = React.useState('')
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const day = ("0" + currentDate.getDate()).slice(-2);
     const [date, setDate] = React.useState(`${year}-${month}-${day}`)
+    const [activity, setActivity] = React.useState(false)
 
     const SetData = () => {
         const dt = []
@@ -37,12 +36,13 @@ export default function Measurment() {
     }
     SetData()
     const Submit = async () => {
+        setActivity(true)
         try {
           const data = await _retrieve_data('data');
           console.log(uuid);
           const result = await post_measurment(data.jwt.token, {
             uuid: uuid,
-            date: '2027-04-10',
+            date: '2027-08-10',
             age: Number(age),
             bb: Number(bb),
             tb: Number(tb),
@@ -51,16 +51,18 @@ export default function Measurment() {
             lila: Number(lila),
             lika: Number(lika),
           });
-      
           if (result.status === 201) {
             console.log('berhasil');
             Hasil_Pengukuran()
             setDoSubmit(true)
+            setActivity(false)
           } else {
             alert(result.message);
+            setActivity(false)
           }
         } catch (err) {
           alert(err);
+          setActivity(false)
         }
       }
 
@@ -69,7 +71,7 @@ export default function Measurment() {
             const data = await _retrieve_data('data');
             const result = await user_measurmet(data.jwt.token, {})
             if(result.status === 200){
-                setHasil(result.data)
+                _store_data('measurment', result.data)
             }else{
                 alert(result.message)
             }
@@ -84,7 +86,6 @@ export default function Measurment() {
                 defaultButtonText='Pilih Bayi'
                 data={dataBayi.map((value) => {return value.name})}
                 onSelect={(selectedItem, index) => {
-                    console.log(hasil);
                     setuuid(dataBayi[index].uuid)
                     setDoSubmit(false)
                 }}
@@ -149,9 +150,16 @@ export default function Measurment() {
                     onChangeText={setLika}
                     value={String(lika)}
                 />
-                <TouchableOpacity style={{alignSelf:'center'}} onPress={Submit}>
-                    <Text>Submit</Text>
-                </TouchableOpacity>
+                {activity? 
+                (
+                    <ActivityIndicator />
+
+                ):(
+                    
+                    <TouchableOpacity style={{alignSelf:'center'}} onPress={Submit}>
+                        <Text>Submit</Text>
+                    </TouchableOpacity>
+                )}
                 </View>
 
 )}
