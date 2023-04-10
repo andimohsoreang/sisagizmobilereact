@@ -2,10 +2,11 @@ import {useFonts} from 'expo-font'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Login } from '../backend/auth/login'
-import { _store_data } from '../backend/handler/storage_handler'
+import { _retrieve_data, _store_data } from '../backend/handler/storage_handler'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Entypo } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native'
+import { get_all_bayi } from '../backend/api/all_api'
 
 
 
@@ -23,10 +24,18 @@ export default function LoginScreenUser() {
     setIsData(false)
     try {
       let result = await Login(username, password);
-  
       if (result.status === 200) {
         _store_data('data', result.data);
-        console.log(result.data);
+        get_all_bayi(result.data.jwt.token,
+          {}).then((result) => {
+            if(result.status == 200){
+              _store_data('bayi', result.data)
+            }else{
+              console.log(result.message);
+            }
+          }).catch(err => {
+            alert(err)
+          })
         alert(result.data.message);
         setIsData(true)
       } else {

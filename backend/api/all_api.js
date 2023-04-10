@@ -18,10 +18,25 @@ const user_login = async data => {
 }
 
 const post_measurment = async (token, data) => {
-
     try {
         const result = await ApiManager('measurement',{
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Baerer ${token}`
+            },
+            data: data
+        })
+        return result
+    }catch(error){
+        return error.response.data
+    }
+}
+
+const get_all_bayi = async (token, data) => {
+    try {
+        const result = await ApiManager('toddlers',{
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Baerer ${token}`
@@ -73,12 +88,13 @@ const user_calculator = async data => {
     }
 }
 
-const user_measurmet = async data => {
+const user_measurmet = async (token, data) => {
     try {
-        const result = await ApiManager('', {
+        const result = await ApiManager('measurement', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             params: {
             }
@@ -89,15 +105,16 @@ const user_measurmet = async data => {
     }
 }
 
-const user_measurmentBy_uuid = async data => {
+const user_measurmentBy_uuid = async (token, data) => {
     try {
-        const result = await ApiManager('', {
+        const result = await ApiManager(`measurement/${data.uuid}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             params: {
-                uuid: data.uuid
+
             }
         })
         return result
@@ -256,5 +273,6 @@ export {
         get_puskesmasBy_uuid,
         get_posyandu,
         get_posyanduBy_uuid,
-        post_measurment    
+        post_measurment,
+        get_all_bayi    
     }
