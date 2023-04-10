@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
-export default function Article() {
+export default function Splash() {
   return (
     <View>
-      <Text>Articasdasdle</Text>
+      <Text>Splash</Text>
     </View>
   )
 }

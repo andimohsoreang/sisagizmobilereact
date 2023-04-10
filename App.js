@@ -8,6 +8,7 @@ import Article from './screens/Article/Article';
 import HomeScreen from './screens/Home/HomeScreen';
 import { Feather } from "@expo/vector-icons";
 import MeasurementPage from './screens/Measure/MeasurementPage'
+import Splash from './screens/Splash/Splash'
 
 export default function App() {
 
@@ -68,12 +69,17 @@ function MyTabs() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="HomeSCreen"
+        initialRouteName="Home"
       >
         <Stack.Screen
           options={{ headerShown: false }}
           name="onBoarding"
           component={OnBoarding}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Splash"
+          component={Splash}
         />
         <Stack.Screen
           options={{ headerShown: false }}

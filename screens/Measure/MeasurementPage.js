@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
+import { SelectDropdown } from 'react-native-select-dropdown';
 
 export default function HomeScreen() {
   const [fontsLoaded] = useFonts({
@@ -19,6 +20,9 @@ export default function HomeScreen() {
   });
 
   if (!fontsLoaded) return null;
+
+  
+
 
   return (
     <View style={styles.container}>
@@ -33,12 +37,36 @@ export default function HomeScreen() {
       </View>
       <View style={styles.menuContainer}>
         <View style={styles.umur}>
-            <Text style={styles.textTitle}>Umur</Text>
-          <View style={{flexDirection: 'row'}}>
+          <Text style={styles.textTitle}>Umur</Text>
+          <View style={{ flexDirection: "row" }}>
             <TextInput style={styles.textInput} />
-            <Text style={{alignSelf:'center', marginLeft:10}}>Bulan</Text>
+            <Text style={styles.textSatuan}>Bulan</Text>
           </View>
-          <View>
+          <View></View>
+        </View>
+        <View style={styles.beratBadan}>
+          <Text style={styles.textTitle}>Berat Badan</Text>
+          <View style={{ flexDirection: "row" }}>
+            <TextInput style={styles.textInput} />
+            <Text style={styles.textSatuan}>Kg</Text>
+          </View>
+        </View>
+        <View style={styles.tinggiBadan}>
+          <Text style={styles.textTitle}>Tinggi Badan</Text>
+          <View style={{ flexDirection: "row" }}>
+            <TextInput style={styles.textInput} />
+            <Text style={styles.textSatuan}>Cm</Text>
+          </View>
+        </View>
+        <View style={styles.tinggiBadan}>
+          <Text style={styles.textTitle}>Jenis Kelamin</Text>
+          <View style={{ flexDirection: "row" }}>
+            <SelectDropdown
+              data={'andi'}
+              onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index);
+              }}
+            />
           </View>
         </View>
       </View>
@@ -76,7 +104,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "black",
     height: 50,
-    width: "30%",
+    width: "70%",
     fontFamily: "PopSemiBold",
+  },
+  textSatuan: {
+    alignSelf: "center",
+    marginLeft: 10,
+    fontSize: 16,
+    fontFamily: "PopRegular",
+  },
+  beratBadan: {
+    margin: 20,
+  },
+  tinggiBadan: {
+    margin: 20,
+    marginTop:1 
   },
 });
