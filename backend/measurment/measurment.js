@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { _retrieve_data, _store_data } from '../handler/storage_handler'
-import { post_measurment, user_measurmentBy_uuid, user_measurmet } from '../api/all_api'
+import { get_posyandu, post_measurment, user_measurmentBy_uuid, user_measurmet } from '../api/all_api'
 import SelectDropdown from 'react-native-select-dropdown'
 import { ActivityIndicator } from 'react-native'
 import Log_Measurment from './log_measurment'
@@ -24,17 +24,20 @@ export default function Measurment() {
     const [date, setDate] = React.useState(`${year}-${month}-${day}`)
     const [activity, setActivity] = React.useState(false)
 
-    const SetData = () => {
+    const SetData = async() => {
         const dt = []
+        const POSYANDU = await get_posyandu({})
+        const data = await _retrieve_data('data');
         _retrieve_data('bayi').then((data) => {
             data.result.map((value) => {
-                if(value.posyandu == 'hilang'){
+                if(value.posyandu == POSYANDU.data[data.user.posyanduId].nama){
                     dt.push(value)
                 }
             })
             setDataBayi(dt)
         })
     }
+
     SetData()
     const Submit = async () => {
         setActivity(true)
