@@ -6,8 +6,6 @@ import styleFonts from '../../fonts';
 
 export default function MainHomePosyandu() {
 
-
-
   return (
     <View>
       <View style={{ flex: 1 }}>
