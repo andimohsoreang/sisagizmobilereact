@@ -4,6 +4,7 @@ import { _retrieve_data, _store_data } from '../handler/storage_handler'
 import { post_measurment, user_measurmentBy_uuid, user_measurmet } from '../api/all_api'
 import SelectDropdown from 'react-native-select-dropdown'
 import { ActivityIndicator } from 'react-native'
+import Log_Measurment from './log_measurment'
 
 export default function Measurment() {
     const [uuid, setuuid] = React.useState('')
@@ -42,7 +43,7 @@ export default function Measurment() {
           console.log(uuid);
           const result = await post_measurment(data.jwt.token, {
             uuid: uuid,
-            date: '2027-08-10',
+            date: date,
             age: Number(age),
             bb: Number(bb),
             tb: Number(tb),
@@ -72,6 +73,7 @@ export default function Measurment() {
             const result = await user_measurmet(data.jwt.token, {})
             if(result.status === 200){
                 _store_data('measurment', result.data)
+                _store_data('UUID', uuid)
             }else{
                 alert(result.message)
             }
@@ -80,7 +82,7 @@ export default function Measurment() {
         }
     }
   return (
-    <View>      
+    <View>     
         <View>
             <SelectDropdown 
                 defaultButtonText='Pilih Bayi'
@@ -95,7 +97,7 @@ export default function Measurment() {
             <View>
                 {doSubmit? 
                 (
-                    <Text></Text>
+                    <Log_Measurment />
                 ) 
                 : 
                 (
