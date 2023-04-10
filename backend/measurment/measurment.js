@@ -24,21 +24,18 @@ export default function Measurment() {
     const [date, setDate] = React.useState(`${year}-${month}-${day}`)
     const [activity, setActivity] = React.useState(false)
 
-    const SetData = async() => {
-        const dt = []
-        const POSYANDU = await get_posyandu({})
-        const data = await _retrieve_data('data');
-        _retrieve_data('bayi').then((data) => {
-            data.result.map((value) => {
-                if(value.posyandu == POSYANDU.data[data.user.posyanduId].nama){
-                    dt.push(value)
-                }
-            })
-            setDataBayi(dt)
-        })
-    }
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data_user = await _retrieve_data('data');
+            const POSYANDU = await get_posyandu(data_user.jwt.token, {});
+            const data = await _retrieve_data('bayi');
+            const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
+            setDataBayi(newDataBayi);
+        }
+        fetchData();
+    }, []);
 
-    SetData()
+
     const Submit = async () => {
         setActivity(true)
         try {

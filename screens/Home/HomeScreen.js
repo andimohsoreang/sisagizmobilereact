@@ -1,6 +1,7 @@
 import { TouchableOpacity,StyleSheet, Text, View, ScrollView } from 'react-native'
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
+import Measurment from '../../backend/measurment/measurment';
 
 
 
