@@ -32,13 +32,13 @@ export default function MeasurementPosyandu(props) {
   const day = ("0" + currentDate.getDate()).slice(-2);
   const [date, setDate] = React.useState(`${year}-${month}-${day}`)
   const [uuid, setuuid] = React.useState('')
-  const [age, setAge] = React.useState(3)
-  const [bb, setBB] = React.useState(2.9)
-  const [tb, setTB] = React.useState(70)
+  const [age, setAge] = React.useState(0)
+  const [bb, setBB] = React.useState(0)
+  const [tb, setTB] = React.useState(0)
   const [method, setMethod] = React.useState('Terlentang')
   const [vitamin, setVitamin] = React.useState('ya')
-  const [lila, setLila] = React.useState(4)
-  const [lika, setLika] = React.useState(4)
+  const [lila, setLila] = React.useState(0)
+  const [lika, setLika] = React.useState(0)
   const [doSubmit, setDoSubmit] = React.useState(false)
   const [dataBayi, setDataBayi] = React.useState([])
 
@@ -107,10 +107,10 @@ export default function MeasurementPosyandu(props) {
           }}
         />
       </View>
-        <ScrollView>
+      <ScrollView>
         {doSubmit ? (
           <View style={styles.menuContainer}>
-              <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row' }}>
               <View style={styles.firstIndex}>
                 <Text style={styles.textTitle}>Tanggal Pengukuran</Text>
                 <View style={{ flexDirection: "row" }}>
@@ -121,86 +121,86 @@ export default function MeasurementPosyandu(props) {
                   />
                 </View>
               </View>
-                <View style={styles.umur}>
-                  <Text style={styles.textTitle}>Umur</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <TextInput style={styles.textInputUmur}
-                      keyboardType='numeric'
-                      placeholder='Umur'
-                      onChangeText={setAge}
-                      value={String(age)} />
-                    <Text>Bulan</Text>
-                  </View>
-                </View>
-                <View style={styles.umur}>
-                  <Text style={styles.textTitle}>Berat Badan</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <TextInput style={styles.textInputUmur}
-                      keyboardType='numeric'
-                      placeholder='Berat Badan'
-                      onChangeText={setBB}
-                      value={String(bb)} />
-                    <Text>Kg</Text>
-                  </View>
-                </View>
+            </View>
+            <View style={styles.umur}>
+              <Text style={styles.textTitle}>Umur</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput style={styles.textInputUmur}
+                  keyboardType='numeric'
+                  placeholder='Umur'
+                  onChangeText={setAge}
+                  value={String(age)} />
+                <Text>Bulan</Text>
               </View>
+            </View>
+            <View style={styles.umur}>
+              <Text style={styles.textTitle}>Berat Badan</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput style={styles.textInputUmur}
+                  keyboardType='numeric'
+                  placeholder='Berat Badan'
+                  onChangeText={setBB}
+                  value={String(bb)} />
+                <Text>Kg</Text>
+              </View>
+            </View>
+            <View style={styles.umur}>
+              <Text style={styles.textTitle}>Tinggi Badan</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput style={styles.textInputUmur}
+                  keyboardType='numeric'
+                  placeholder='Tinggi Badan'
+                  onChangeText={setTB}
+                  value={String(tb)} />
+                <Text>Cm</Text>
+              </View>
+            </View>
+            <View>
               <View style={styles.umur}>
-                <Text style={styles.textTitle}>Tinggi Badan</Text>
+                <Text style={styles.textTitle}>Lila</Text>
                 <View style={{ flexDirection: "row" }}>
                   <TextInput style={styles.textInputUmur}
-                    keyboardType='numeric'
-                    placeholder='Tinggi Badan'
-                    onChangeText={setTB}
-                    value={String(tb)} />
+                    placeholder='Lingkar Lengan'
+                    onChangeText={setLila}
+                    value={String(lila)} />
                   <Text>Cm</Text>
                 </View>
               </View>
-              <View>
-                <View style={styles.umur}>
-                  <Text style={styles.textTitle}>Lila</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <TextInput style={styles.textInputUmur}
-                      placeholder='Lingkar Lengan'
-                      onChangeText={setLila}
-                      value={String(lila)} />
-                    <Text>Cm</Text>
-                  </View>
-                </View>
-                <View style={styles.umur}>
-                  <Text style={styles.textTitle}>LiKa</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <TextInput style={styles.textInputUmur}
-                      placeholder='Lingkar Kaki'
-                      onChangeText={setLika}
-                      value={String(lika)} />
-                    <Text>Cm</Text>
-                  </View>
-                </View>
-                <View style={styles.umur}>
-                  <Text style={styles.textTitle}>Cara Ukur</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <SelectDropdown
-                      defaultValue={'Terlentang'}
-                      data={['Terlentang', 'Berdiri']}
-                      onSelect={(selectedItem, index) => {
-                        setMethod(selectedItem)
-                      }}
-                    />
-                  </View>
-                </View>
-                <View style={styles.umur}>
-                  <Text style={styles.textTitle}>Vitamin A</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <SelectDropdown
-                      defaultValue={'Ya'}
-                      data={['Ya', 'Tidak']}
-                      onSelect={(selectedItem, index) => {
-                        setVitamin(selectedItem)
-                      }}
-                    />
-                  </View>
+              <View style={styles.umur}>
+                <Text style={styles.textTitle}>LiKa</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput style={styles.textInputUmur}
+                    placeholder='Lingkar Kaki'
+                    onChangeText={setLika}
+                    value={String(lika)} />
+                  <Text>Cm</Text>
                 </View>
               </View>
+              <View style={styles.umur}>
+                <Text style={styles.textTitle}>Cara Ukur</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <SelectDropdown
+                    defaultValue={'Terlentang'}
+                    data={['Terlentang', 'Berdiri']}
+                    onSelect={(selectedItem, index) => {
+                      setMethod(selectedItem)
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={styles.umur}>
+                <Text style={styles.textTitle}>Vitamin A</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <SelectDropdown
+                    defaultValue={'Ya'}
+                    data={['Ya', 'Tidak']}
+                    onSelect={(selectedItem, index) => {
+                      setVitamin(selectedItem)
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
             <TouchableOpacity style={{ marginTop: 20 }} onPress={Submit}>
               <View style={styles.btn}>
                 <Text style={{ fontFamily: "PopBold", color: "black" }}>
@@ -213,7 +213,7 @@ export default function MeasurementPosyandu(props) {
           (
             <Text></Text>
           )}
-            </ScrollView>
+      </ScrollView>
     </View>
   );
 }

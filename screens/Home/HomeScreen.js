@@ -42,7 +42,11 @@ export default function HomeScreen(props) {
             R.push(value)
           }
         })
-        setRiwayat(R.slice(-4))
+        setRiwayat(prevRiwayat => {
+          const slicedRiwayat = R.slice(-4);
+          const reversedRiwayat = slicedRiwayat.reverse();
+          return reversedRiwayat;
+        });
       }
       setUser(dt)
     }
