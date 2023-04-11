@@ -72,17 +72,11 @@ export default function MeasurementPosyandu(props) {
           uuid: uuid,
           date: date
         }).then((result) => {
+          alert('Pengukuran Berhasil')
           props.navigation.navigate('MeasureRes')
         })
       } else {
-        await _store_data('pengukuran', {
-          uuid: uuid,
-          date: date
-        }).then((res) => {
           alert(result.message);
-          props.navigation.navigate('MeasureRes')
-        })
-        //nanti hapus ini
       }
     } catch (err) {
       alert(err);

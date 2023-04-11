@@ -131,7 +131,6 @@ export default function HomeScreen(props) {
               ) : (
                 <Text></Text>
               )}
-
             </View>
           </ScrollView>
         </View>
