@@ -72,7 +72,7 @@ export default function MeasurementPosyandu(props) {
         props.navigation.navigate('MeasureRes')
       } else {
         alert(result.message);
-        props.navigation.navigate('MeasureRes')
+
       }
     } catch (err) {
       alert(err);

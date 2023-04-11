@@ -20,4 +20,13 @@ const _retrieve_data = async (key) => {
     }
 } 
 
-export {_store_data, _retrieve_data }
+const _remove_data = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key); // Menghapus item dengan key tertentu dari penyimpanan
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+export {_store_data, _retrieve_data, _remove_data}

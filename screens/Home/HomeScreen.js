@@ -2,7 +2,7 @@ import { TouchableOpacity, StyleSheet, Text, View, ScrollView } from 'react-nati
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
 import Measurment from '../../backend/measurment/measurment';
-import { _retrieve_data } from '../../backend/handler/storage_handler';
+import { _remove_data, _retrieve_data } from '../../backend/handler/storage_handler';
 import React from 'react';
 import { get_all_bayi, get_posyandu, user_measurmet } from '../../backend/api/all_api';
 
@@ -135,6 +135,11 @@ export default function HomeScreen(props) {
             
             </View>
           </ScrollView>
+          <TouchableOpacity  onPress={() => {
+                props.navigation.navigate("Login");
+          }}>
+                <Text>Log out</Text>
+              </TouchableOpacity>
         </View>
       </View>
     </View>

@@ -102,6 +102,7 @@ export default function MeasurementPage(props) {
 
 
         <TouchableOpacity onPress={()=>{
+          if(AGE != 0 && tb !== 0 && TB != 0){
           _store_data('calc', {
             age: AGE,
             tb : TB,
@@ -109,6 +110,9 @@ export default function MeasurementPage(props) {
             jk: JK
           })
           props.navigation.navigate("CalcRes")
+        }else{
+          alert('Mohon Perhatikan Data Yang Diisi')
+        }
         }}>
           <View style={styles.btn}>
             <Text style={{ fontFamily: "PopBold", color: "black" }}>
