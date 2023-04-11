@@ -2,7 +2,7 @@ import { TouchableOpacity, StyleSheet, Text, View, ScrollView } from 'react-nati
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
 import Measurment from '../../backend/measurment/measurment';
-import { _remove_data, _retrieve_data } from '../../backend/handler/storage_handler';
+import { _get_all_keys_data, _remove_data, _retrieve_data, _store_data } from '../../backend/handler/storage_handler';
 import React from 'react';
 import { get_all_bayi, get_posyandu, user_measurmet } from '../../backend/api/all_api';
 
@@ -22,32 +22,27 @@ export default function HomeScreen(props) {
   React.useEffect(() => {
     const fetchData = async () => {
       const dt = await _retrieve_data('data')
-      if (dt != null) {
-        const posyandu = await get_posyandu(dt.jwt.token, {})
-        if (posyandu != null) {
-          const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
-          if (admin_posyandu != null) {
-            let uuidBayi = []
-            const lsBayi = await get_all_bayi(dt.jwt.token, {})
-            if (lsBayi != null) {
-              lsBayi.data.result.map((value, index) => {
-                if (value.posyandu == admin_posyandu.nama) {
-                  uuidBayi.push(value.uuid)
-                }
-              });
-              const Riwayat = await user_measurmet(dt.jwt.token, {})
-              let R = []
-              if (Riwayat != null) {
-                Riwayat.data.data.map((value, index) => {
-                  if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
-                    R.push(value)
-                  }
-                })
-                setRiwayat(R.slice(-4))
-              }
-            }
-          }
+      const posyandu = await get_posyandu(dt.jwt.token, {})
+      const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
+      let uuidBayi = []
+      const lsBayi = await get_all_bayi(dt.jwt.token, {})
+      if(lsBayi != null){
+        await _store_data('bayi', lsBayi.data)
+      }
+      lsBayi.data.result.map((value, index) => {
+        if (value.posyandu == admin_posyandu.nama) {
+          uuidBayi.push(value.uuid)
         }
+      });
+      const Riwayat = await user_measurmet(dt.jwt.token, {})
+      let R = []
+      if (Riwayat != null) {
+        Riwayat.data.data.map((value, index) => {
+          if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
+            R.push(value)
+          }
+        })
+        setRiwayat(R.slice(-4))
       }
       setUser(dt)
     }
@@ -112,34 +107,34 @@ export default function HomeScreen(props) {
           <Text style={styles.riwayatText}>Riwayat</Text>
           <ScrollView horizontal style={{ height: 100 }}>
             <View>
-             
-                {Riwayat != null ? (
-                  <View
+
+              {Riwayat != null ? (
+                <View
                   style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-                    {Riwayat.map((value, index) => (
-                      <View style={styles.boxRiwayat}>
-                        <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
-                        <Feather
-                          name="trending-up"
-                          size={18}
-                          color="green"
-                          style={{ position: "absolute", left: 80, top: 10 }}
-                        />
-                        <Text style={styles.riwayatNama}>{value.Toddler.name}</Text>
-                      </View>
-                    ))}
-                  </View>
-                ) : (
-                  <Text></Text>
-                )}
-            
+                  {Riwayat.map((value, index) => (
+                    <View style={styles.boxRiwayat}>
+                      <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
+                      <Feather
+                        name="trending-up"
+                        size={18}
+                        color="green"
+                        style={{ position: "absolute", left: 80, top: 10 }}
+                      />
+                      <Text style={styles.riwayatNama}>{value.Toddler.name}</Text>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <Text></Text>
+              )}
+
             </View>
           </ScrollView>
-          <TouchableOpacity  onPress={() => {
-                props.navigation.navigate("Login");
+          <TouchableOpacity onPress={() => {
+            props.navigation.navigate("Login");
           }}>
-                <Text>Log out</Text>
-              </TouchableOpacity>
+            <Text>Log out</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

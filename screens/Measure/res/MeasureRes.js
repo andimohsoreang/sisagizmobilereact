@@ -6,9 +6,13 @@ import {
   View,
   ScrollView,
   TextInput,
+  LogBox,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
+import { _retrieve_data } from "../../../backend/handler/storage_handler";
+import { get_posyandu, user_measurmet } from "../../../backend/api/all_api";
+import { ActivityIndicator } from "react-native";
 
 // Move the useFonts hook outside of the component function
 const fontConfig = {
@@ -20,10 +24,25 @@ const fontConfig = {
 };
 
 export default function MeasurementPage(props) {
-  const [JK, setJK] = React.useState("L");
-
-  // Call the useFonts hook outside of the component function
   const [fontsLoaded] = useFonts(fontConfig);
+  const [bayi, setBayi] = React.useState(null)
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data_user = await _retrieve_data('data');
+      const data_bayi = await _retrieve_data('pengukuran')
+      let dt;
+      if (data_user != null && data_bayi != null) {
+        const data_measurment = await user_measurmet(data_user.jwt.token, {})
+        data_measurment.data.data.map((value, index) => {
+          if (value.Toddler.uuid == data_bayi.uuid && value.date == data_bayi.date) {
+            dt = value
+          }
+        })
+      }
+      setBayi(dt)
+    }
+    fetchData();
+  }, []);
 
   if (!fontsLoaded) return null;
 
@@ -31,68 +50,131 @@ export default function MeasurementPage(props) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={{ fontFamily: "PopBold", fontSize: 20, marginTop: 10 }}>
-          Hasil Pengujian Sementara
+          Hasil Pengukuran
         </Text>
-        <Text style={{ fontFamily: "PopRegular", fontSize: 12, marginTop: 10 }}>
-          ini adalah hasil pengujian sementara anda
-        </Text>
+        {bayi != null ? (
+          <Text style={{ fontFamily: "PopBold", fontSize: 15, marginTop: 10 }}>
+            {bayi.Toddler.name}
+          </Text>
+        ) : (
+          <ActivityIndicator />
+        )}
       </View>
+        <ScrollView>
       <View style={styles.menuContainer}>
-        <View style={styles.umur}>
-          <Text style={styles.textTitle}>Umur</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>12 Bulan</Text>
+        {bayi != null ? (
+          <View>
+            <View style={styles.umur}>
+              <View style={{marginBottom:5}}><Text style={{fontFamily:"PopBold", fontSize:18}}>Detail Pengukuran</Text></View>
+              <Text style={styles.textTitle}>Tanggal pengukuran</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.date}</Text>
+              </View>
+            </View>
+            <View style={styles.beratBadan}>
+              <Text style={styles.textTitle}>Umur</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.current_age} Bulan</Text>
+              </View>
+              <View></View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Berat Badan</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.bb} Kg</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Tinggi Badan</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.tb} Cm</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Status Gizi (BB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.bbu}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Status Gizi (TB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.tbu}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Status Gizi (BB/TB)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.bbtb}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Vitamin</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.vitamin}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+            <View style={{marginBottom:5}}><Text style={{fontFamily:"PopBold", fontSize:18}}>Hasil Klasifikasi</Text></View>
+              <Text style={styles.textTitle}>Hasil</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{ bayi.predict_result == 0? ('Normal'): ('Stunting') }</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Probabilitas Stunting</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.predict_accuracy}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Probabilitas Normal</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>Normal</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Akurasi</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.predict_accuracy * 100} %</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+            <View style={{marginBottom:5}}><Text style={{fontFamily:"PopBold", fontSize:18}}>Rekomendasi</Text></View>
+              <Text style={styles.textTitle}>Berat Badan (BB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.rekombbu} Kg</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Tinggi Badan (TB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Berat Badan (BB/TB)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate("MeasurementPosyandu");
+              }}
+              >
+              <View style={styles.btn}>
+                <Text style={{ fontFamily: "PopBold", color: "black" }}>
+                  Coba Ukur Lagi
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
-          <View></View>
-        </View>
-        <View style={styles.beratBadan}>
-          <Text style={styles.textTitle}>Berat Badan</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>12 Kg</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Tinggi Badan</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>13 Cm</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Jenis Kelamin</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Perempuan</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekomendasi</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Normal</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekomendasi</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Normal</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekomendasi</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Normal</Text>
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate("MeasurementPage");
-          }}
-        >
-          <View style={styles.btn}>
-            <Text style={{ fontFamily: "PopBold", color: "black" }}>
-              Coba Ukur Lagi
-            </Text>
-          </View>
-        </TouchableOpacity>
+        ) : (
+          <ActivityIndicator />
+          )}
       </View>
+          </ScrollView>
     </View>
   );
 }
@@ -148,10 +230,11 @@ const styles = StyleSheet.create({
     width: "50%",
     height: 50,
     borderRadius: 30,
-    marginTop: 10,
+    marginTop: 100,
+    marginBottom: 25,
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor: "#FFCE81",
+    backgroundColor: "white",
     justifyContent: "center",
   },
 });
