@@ -19,15 +19,17 @@ import LoginScreenUser from './screens/Login';
 export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
-  const [data, setData] = React.useState([])
+  const [data, setData] = React.useState({})
 
   React.useEffect(() => {
     const fetchData = async () => {
       const data_user = await _retrieve_data('data');
-      setData(data_user)
+      if (data_user != null) {
+        setData(data_user)
+      }
     }
     fetchData();
-  }, []);
+  }, [])
 
   function MyTabs() {
     return (
@@ -40,7 +42,7 @@ export default function App() {
         <Tab.Screen
           options={{
             tabBarIcon: (props) => (
-              <Feat her name="home" size={24} color="black" />
+              <Feather name="home" size={24} color="black" />
             ),
           }}
           name="Home"
@@ -48,7 +50,7 @@ export default function App() {
         />
         <Tab.Screen
           name="Pengukuran"
-          component={PetugasLogin}
+          component={data!= null? (MeasurementPosyandu) : (LoginScreenUser) }
           options={{
             tabBarIcon: (props) => (
               <Feather name="aperture" size={24} color="black" />
@@ -65,31 +67,32 @@ export default function App() {
           }}
         />
 
-        {data_user != null ? (
+        {data != null ?
+          (
 
-          <Tab.Screen
-            name="Profile"
-            component={Article}
-            options={{
-              tabBarIcon: (props) => (
-                <Feather name="user" size={24} color="black" />
-              ),
-            }}
-          />
+            <Tab.Screen
+              name="Profile"
+              component={Article}
+              options={{
+                tabBarIcon: (props) => (
+                  <Feather name="user" size={24} color="black" />
+                ),
+              }}
+            />
+          )
+          :
+          (
 
-        ) : (
-
-          <Tab.Screen
-            name="Login"
-            component={LoginScreenUser}
-            options={{
-              tabBarIcon: (props) => (
-                <Feather name="user" size={24} color="black" />
-              ),
-            }}
-
-          />
-        )}
+            <Tab.Screen
+              name="Login"
+              component={LoginScreenUser}
+              options={{
+                tabBarIcon: (props) => (
+                  <Feather name="user" size={24} color="black" />
+                ),
+              }}
+            />
+          )}
       </Tab.Navigator>
     );
   }
@@ -130,6 +133,7 @@ export default function App() {
           name="MeasureRes"
           component={MeasureRes}
         />
+       
         <Stack.Screen name="Article" component={Article} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -10,7 +10,7 @@ import {
 import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
-import { _store_data, _retrieve_data } from "../../backend/handler/storage_handler";
+import { _store_data, _retrieve_data, _get_all_keys_data } from "../../backend/handler/storage_handler";
 import { get_posyandu } from "../../backend/api/all_api";
 import { post_measurment } from "../../backend/api/all_api";
 
@@ -56,7 +56,6 @@ export default function MeasurementPosyandu(props) {
   const Submit = async () => {
     try {
       const data = await _retrieve_data('data');
-      console.log(uuid);
       const result = await post_measurment(data.jwt.token, {
         uuid: uuid,
         date: date,
@@ -69,10 +68,19 @@ export default function MeasurementPosyandu(props) {
         lika: Number(lika),
       });
       if (result.status === 201) {
-        props.navigation.navigate('MeasureRes')
+        await _store_data('pengukuran', {
+          uuid: uuid
+        }).then((result) => {
+          props.navigation.navigate('MeasureRes')
+        })
       } else {
-        alert(result.message);
-
+        await _store_data('pengukuran', {
+          uuid: uuid
+        }).then((result) => {
+          alert(result.message);
+          props.navigation.navigate('MeasureRes')
+        })
+        //nanti hapus ini
       }
     } catch (err) {
       alert(err);
