@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
-import Graph from '../../backend/growth/graph'
-import Calculator from '../../backend/measurment/calculator'
+import Calculator from './../../backend/measurment/calculator';
+import Graph from './../../backend/growth/graph';
 export default function Article() {
   return (
     <View>

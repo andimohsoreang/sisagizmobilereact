@@ -2,7 +2,20 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, ActivityIndicator 
 import React from 'react'
 import { user_calculator } from '../api/all_api'
 import SelectDropdown from 'react-native-select-dropdown'
+import { useFonts } from "expo-font";
+import { Feather } from "@expo/vector-icons";
 export default function Calculator() {
+    
+    const [fontsLoaded] = useFonts({
+      PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+      PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
+      PopMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+      PopRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+      PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
+    });
+
+    if (!fontsLoaded) return null;
+    
     const [AGE, setAge] = React.useState(11)
     const [BB, setBB] = React.useState(8)
     const [TB, setTB] = React.useState(69)
