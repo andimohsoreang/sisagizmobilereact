@@ -6,9 +6,12 @@ import {
   View,
   ScrollView,
   TextInput,
+  ActivityIndicator
 } from "react-native";
 import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
+import { user_calculator } from "../../../backend/api/all_api";
+import { _retrieve_data } from "../../../backend/handler/storage_handler";
 
 // Move the useFonts hook outside of the component function
 const fontConfig = {
@@ -20,12 +23,38 @@ const fontConfig = {
 };
 
 export default function MeasurementPage(props) {
-  const [JK, setJK] = React.useState("L");
-
   // Call the useFonts hook outside of the component function
   const [fontsLoaded] = useFonts(fontConfig);
+  const [hasilData, setHasilData] = React.useState({})
+  const [Data, setData] = React.useState({})
+  const [success, setSuccess] = React.useState(false);
 
-  if (!fontsLoaded) return null;
+  React.useEffect(() => {
+    async function fetchData() {
+      const data = await _retrieve_data("calc");
+      user_calculator({
+        age: Number(data.age),
+        bb: Number(data.bb),
+        tb: Number(data.tb),
+        jk: data.jk,
+      })
+        .then((result) => {
+          if (result.status === 200) {
+            setHasilData(result.data.data);
+            setData(data);
+            setSuccess(true);
+          } else {
+            alert(result.message);
+          }
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    }
+    fetchData();
+  }, []);
+
+  if (!fontsLoaded) return <ActivityIndicator />;
 
   return (
     <View style={styles.container}>
@@ -37,59 +66,87 @@ export default function MeasurementPage(props) {
           ini adalah hasil pengujian sementara anda
         </Text>
       </View>
-      <View style={styles.menuContainer}>
-        <View style={styles.umur}>
-          <Text style={styles.textTitle}>Umur</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>12 Bulan</Text>
+      <View>
+        {success? (
+          <View>
+
+          <View style={styles.menuContainer}>
+            <View style={styles.umur}>
+              <Text style={styles.textTitle}>Umur</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{Data.age} Bulan</Text>
+              </View>
+              <View></View>
+            </View>
+            <View style={styles.beratBadan}>
+              <Text style={styles.textTitle}>Berat Badan</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{Data.bb} Kg</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Tinggi Badan</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{Data.tb} Cm</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Jenis Kelamin</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{Data.jk == 'L'? ('Laki-laki') : ('Perempuan')}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Hasil (BB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{hasilData.bbu.data.status}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Rekomendasi (BB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{hasilData.bbu.data.rekom} Kg</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Hasil (TB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{hasilData.tbu.data.status}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Rekomendasi (TB/U)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{hasilData.tbu.data.rekom} Cm</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Hasil (BB/TB)</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{hasilData.bbtb.data.status}</Text>
+              </View>
+            </View>
+            <View style={styles.tinggiBadan}>
+              <Text style={styles.textTitle}>Rekmendasi</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textSatuan}>{hasilData.bbtb.data.rekom} Kg</Text>
+              </View>
+            </View>
           </View>
-          <View></View>
         </View>
-        <View style={styles.beratBadan}>
-          <Text style={styles.textTitle}>Berat Badan</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>12 Kg</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Tinggi Badan</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>13 Cm</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Jenis Kelamin</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Perempuan</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekmendasi</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Normal</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekmendasi</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Normal</Text>
-          </View>
-        </View>
-        <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekmendasi</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textSatuan}>Normal</Text>
-          </View>
-        </View>
-        <TouchableOpacity onPress={()=> {
-            props.navigation.navigate("MeasurementPage")}}>
-          <View style={styles.btn}>
-            <Text style={{ fontFamily: "PopBold", color: "black" }}>
-              Coba Ukur Lagi
-            </Text>
-          </View>
-        </TouchableOpacity>
+        ): (
+          <ActivityIndicator />
+        )}
       </View>
+      <TouchableOpacity onPress={() => {
+        props.navigation.navigate("MeasurementPage")
+      }}>
+        <View style={styles.btn}>
+          <Text style={{ fontFamily: "PopBold", color: "black" }}>
+            Coba Ukur Lagi
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }

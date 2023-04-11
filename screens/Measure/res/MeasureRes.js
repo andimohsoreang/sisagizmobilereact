@@ -64,19 +64,19 @@ export default function MeasurementPage(props) {
           </View>
         </View>
         <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekmendasi</Text>
+          <Text style={styles.textTitle}>Rekomendasi</Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.textSatuan}>Normal</Text>
           </View>
         </View>
         <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekmendasi</Text>
+          <Text style={styles.textTitle}>Rekomendasi</Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.textSatuan}>Normal</Text>
           </View>
         </View>
         <View style={styles.tinggiBadan}>
-          <Text style={styles.textTitle}>Rekmendasi</Text>
+          <Text style={styles.textTitle}>Rekomendasi</Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.textSatuan}>Normal</Text>
           </View>

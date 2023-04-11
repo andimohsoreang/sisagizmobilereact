@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
+import SelectDropdown from "react-native-select-dropdown";
+import { _store_data } from "../../backend/handler/storage_handler";
 
 // Move the useFonts hook outside of the component function
 const fontConfig = {
@@ -20,10 +22,14 @@ const fontConfig = {
 };
 
 export default function MeasurementPage(props) {
-  const [JK, setJK] = React.useState("L");
+  const [AGE, setAge] = React.useState(0)
+    const [BB, setBB] = React.useState(0)
+    const [TB, setTB] = React.useState(0)
+    const [JK, setJK] = React.useState('L')
 
   // Call the useFonts hook outside of the component function
   const [fontsLoaded] = useFonts(fontConfig);
+  
 
   if (!fontsLoaded) return null;
 
@@ -39,35 +45,70 @@ export default function MeasurementPage(props) {
         </Text>
       </View>
       <View style={styles.menuContainer}>
+
+
         <View style={styles.umur}>
           <Text style={styles.textTitle}>Umur</Text>
           <View style={{ flexDirection: "row" }}>
-            <TextInput style={styles.textInput} />
+            <TextInput style={styles.textInput}
+            keyboardType='numeric'
+            placeholder='Umur'
+            onChangeText={setAge}
+            value={String(AGE)} />
             <Text style={styles.textSatuan}>Bulan</Text>
           </View>
           <View></View>
         </View>
+
+
         <View style={styles.beratBadan}>
           <Text style={styles.textTitle}>Berat Badan</Text>
           <View style={{ flexDirection: "row" }}>
-            <TextInput style={styles.textInput} />
+            <TextInput style={styles.textInput}
+            keyboardType='numeric'
+            placeholder='Berat Badan'
+            onChangeText={setBB}
+            value={String(BB)} />
             <Text style={styles.textSatuan}>Kg</Text>
           </View>
         </View>
+
+        
         <View style={styles.tinggiBadan}>
           <Text style={styles.textTitle}>Tinggi Badan</Text>
           <View style={{ flexDirection: "row" }}>
-            <TextInput style={styles.textInput} />
+            <TextInput style={styles.textInput} 
+              keyboardType='numeric'
+              placeholder='Tinggi Badan'
+              onChangeText={setTB}
+              value={String(TB)}
+            />
             <Text style={styles.textSatuan}>Cm</Text>
           </View>
         </View>
+
+
         <View style={styles.tinggiBadan}>
           <Text style={styles.textTitle}>Jenis Kelamin</Text>
           <View style={{ flexDirection: "row" }}>
-            <TextInput style={styles.textInput} />
+          <SelectDropdown 
+                defaultValueByIndex={0}
+                data={['Laki-laki', 'Perempuan']}
+                onSelect={(selectedItem, index) => {
+                    setJK(index == 0? ('L') : ('P'))
+                }}
+            />
           </View>
         </View>
+
+
         <TouchableOpacity onPress={()=>{
+          _store_data('calc', {
+            age: AGE,
+            tb : TB,
+            bb: BB,
+            jk: JK
+          })
           props.navigation.navigate("CalcRes")
         }}>
           <View style={styles.btn}>
