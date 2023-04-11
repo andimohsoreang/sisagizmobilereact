@@ -2,7 +2,7 @@ import {useFonts} from 'expo-font'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Login } from '../backend/auth/login'
-import { _retrieve_data, _store_data } from '../backend/handler/storage_handler'
+import { _store_data, _retrieve_data } from '../backend/handler/storage_handler'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Entypo } from '@expo/vector-icons';
 import { ActivityIndicator } from 'react-native'
@@ -10,7 +10,7 @@ import { get_all_bayi } from '../backend/api/all_api'
 
 
 
-export default function LoginScreenUser() {
+export default function LoginScreenUser(props) {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [hide, setHide] = React.useState(true)
@@ -30,6 +30,7 @@ export default function LoginScreenUser() {
           {}).then((result) => {
             if(result.status == 200){
               _store_data('bayi', result.data)
+              props.navigation.navigate('MeasurementPosyandu')
             }else{
               console.log(result.message);
             }

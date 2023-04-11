@@ -30,7 +30,6 @@ export default function MeasurementPage(props) {
   // Call the useFonts hook outside of the component function
   const [fontsLoaded] = useFonts(fontConfig);
   
-
   if (!fontsLoaded) return null;
 
   return (

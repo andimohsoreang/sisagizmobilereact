@@ -14,6 +14,7 @@ import MeasurementPosyandu from './screens/Measure/MeasurementPosyandu';
 import CalcRes from './screens/Measure/res/CalcRes'
 import MeasureRes from './screens/Measure/res/MeasureRes'
 import PetugasLogin from './screens/PetugasLogin'
+import LoginScreenUser from './screens/Login';
 
 export default function App() {
 
@@ -60,6 +61,15 @@ function MyTabs() {
       <Tab.Screen
         name="Profile"
         component={Article}
+        options={{
+          tabBarIcon: (props) => (
+            <Feather name="user" size={24} color="black" />
+          ),
+        }}
+      />
+       <Tab.Screen
+        name="Login"
+        component={LoginScreenUser}
         options={{
           tabBarIcon: (props) => (
             <Feather name="user" size={24} color="black" />

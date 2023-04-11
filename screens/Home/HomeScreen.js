@@ -1,22 +1,68 @@
-import { TouchableOpacity,StyleSheet, Text, View, ScrollView } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
 import Measurment from '../../backend/measurment/measurment';
-
+import { _retrieve_data } from '../../backend/handler/storage_handler';
+import React from 'react';
+import { get_all_bayi, get_posyandu, user_measurmet } from '../../backend/api/all_api';
 
 
 export default function HomeScreen(props) {
 
 
-   const [fontsLoaded] = useFonts({
-     PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
-     PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
-     PopMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
-     PopRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
-     PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
-   });
+  const [fontsLoaded] = useFonts({
+    PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+    PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
+    PopMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+    PopRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+    PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
+  });
+  const [User, setUser] = React.useState(null)
+  const [Riwayat, setRiwayat] = React.useState(null)
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const dt = await _retrieve_data('data')
+      if (dt != null) {
+        const posyandu = await get_posyandu(dt.jwt.token, {})
+        if (posyandu != null) {
+          const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
+          if (admin_posyandu != null) {
+            let uuidBayi = []
+            const lsBayi = await get_all_bayi(dt.jwt.token, {})
+            if (lsBayi != null) {
+              lsBayi.data.result.map((value, index) => {
+                if (value.posyandu == admin_posyandu.nama) {
+                  uuidBayi.push(value.uuid)
+                }
+              });
+              const Riwayat = await user_measurmet(dt.jwt.token, {})
+              let R = []
+              if (Riwayat != null) {
+                Riwayat.data.data.map((value, index) => {
+                  if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
+                    R.push(value)
+                  }
+                })
+                setRiwayat(R.slice(-4))
+              }
+            }
+          }
+        }
+      }
+      setUser(dt)
+    }
+    fetchData();
+  }, []);
 
-   if (!fontsLoaded) return null;
+  if (!fontsLoaded) return null;
+  const Submit = async () => {
+    const dt = await _retrieve_data('data')
+    if (dt != null) {
+      props.navigation.navigate('MeasurementPosyandu')
+    } else {
+      props.navigation.navigate("Login");
+    }
+  }
 
 
   return (
@@ -31,7 +77,9 @@ export default function HomeScreen(props) {
           Selamat Datang
         </Text>
         <Text style={{ fontFamily: "PopBold", fontSize: 14 }}>
-          Andi Muhamad Nurholis Soreang
+          {User != null ? (
+            User.user.name
+          ) : (<Text></Text>)}
         </Text>
       </View>
       <View style={styles.banner}></View>
@@ -40,14 +88,12 @@ export default function HomeScreen(props) {
           <Text style={styles.menuText}>Menu</Text>
           <View style={{ pading: 10 }}>
             <View style={styles.containerMenu}>
-              <TouchableOpacity style={styles.menu1} onPress={()=> {
-                props.navigation.navigate("Pengukuran");
-              }}>
+              <TouchableOpacity style={styles.menu1} onPress={Submit}>
                 <Text>Menu 1</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu2} onPress={()=> {
-          props.navigation.navigate("MeasurementPage");
-    
+              <TouchableOpacity style={styles.menu2} onPress={() => {
+                props.navigation.navigate("MeasurementPage");
+
               }} >
                 <Text>Menu 1</Text>
               </TouchableOpacity>
@@ -64,51 +110,29 @@ export default function HomeScreen(props) {
         </View>
         <View>
           <Text style={styles.riwayatText}>Riwayat</Text>
-          <ScrollView horizontal style={{height:100}}>
+          <ScrollView horizontal style={{ height: 100 }}>
             <View>
-              <View
-                style={{ flexDirection: "row", justifyContent: "space-evenly"}}>
-                <View style={styles.boxRiwayat}>
-                  <Text style={styles.riwayatUmur}>2 Bulan</Text>
-                  <Feather
-                    name="trending-up"
-                    size={18}
-                    color="green"
-                    style={{ position: "absolute", left: 80, top: 10 }}
-                  />
-                  <Text style={styles.riwayatNama}>Andi Ibrhim</Text>
-                </View>
-                <View style={styles.boxRiwayat}>
-                  <Text style={styles.riwayatUmur}>3 Bulan</Text>
-                  <Feather
-                    name="trending-up"
-                    size={18}
-                    color="green"
-                    style={{ position: "absolute", left: 80, top: 10 }}
-                  />
-                  <Text style={styles.riwayatNama}>Andi Ibrhim</Text>
-                </View>
-                <View style={styles.boxRiwayat}>
-                  <Text style={styles.riwayatUmur}>4 Bulan</Text>
-                  <Feather
-                    name="trending-up"
-                    size={18}
-                    color="green"
-                    style={{ position: "absolute", left: 80, top: 10 }}
-                  />
-                  <Text style={styles.riwayatNama}>Andi Ibrhim</Text>
-                </View>
-                <View style={styles.boxRiwayat}>
-                  <Text style={styles.riwayatUmur}>4 Bulan</Text>
-                  <Feather
-                    name="trending-up"
-                    size={18}
-                    color="green"
-                    style={{ position: "absolute", left: 80, top: 10 }}
-                  />
-                  <Text style={styles.riwayatNama}>Andi Ibrhim</Text>
-                </View>
-              </View>
+             
+                {Riwayat != null ? (
+                  <View
+                  style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                    {Riwayat.map((value, index) => (
+                      <View style={styles.boxRiwayat}>
+                        <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
+                        <Feather
+                          name="trending-up"
+                          size={18}
+                          color="green"
+                          style={{ position: "absolute", left: 80, top: 10 }}
+                        />
+                        <Text style={styles.riwayatNama}>{value.Toddler.name}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <Text></Text>
+                )}
+            
             </View>
           </ScrollView>
         </View>
