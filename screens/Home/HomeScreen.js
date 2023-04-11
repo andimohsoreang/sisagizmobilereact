@@ -134,11 +134,6 @@ export default function HomeScreen(props) {
 
             </View>
           </ScrollView>
-          <TouchableOpacity onPress={() => {
-            props.navigation.navigate("Login");
-          }}>
-            <Text>Log out</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </View>
