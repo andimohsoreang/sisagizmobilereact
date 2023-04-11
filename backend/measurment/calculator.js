@@ -137,7 +137,7 @@ export default function Calculator() {
         />
         <SelectDropdown 
                 defaultValueByIndex={0}
-                data={[Laki-laki, Perempuan]}
+                data={['Laki-laki', 'Perempuan']}
                 onSelect={(selectedItem, index) => {
                     setJK(index == 0? ('L') : ('P'))
                 }}

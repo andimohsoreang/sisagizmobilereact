@@ -141,15 +141,13 @@ const user_measurment_report = async (token, data) => {
     }
 }
 
-const get_growthBy_uuid = async data => {
+const get_growthBy_uuid = async (token, data) => {
     try {
-        const result = await ApiManager('growth', {
+        const result = await ApiManager(`growth/${data.uuid}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
-            },
-            params: {
-                uuid: data.uuid
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         })
         return result
