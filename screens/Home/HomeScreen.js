@@ -7,6 +7,7 @@ import React from 'react';
 import { get_all_bayi, get_posyandu, user_measurmet } from '../../backend/api/all_api';
 import { NavigationContainer } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
+import { useNavigationState } from '@react-navigation/native';
 
 
 function HomeScreen(props) {
@@ -19,45 +20,53 @@ function HomeScreen(props) {
   });
   const [User, setUser] = React.useState(null)
   const [Riwayat, setRiwayat] = React.useState(null)
+  const isFocused = useIsFocused()
+  const navigationState = useNavigationState(state => state);
+  const currentTabIndex = navigationState.index;
+
   React.useEffect(() => {
     const fetchData = async () => {
       const dt = await _retrieve_data('data')
-      const posyandu = await get_posyandu(dt.jwt.token, {})
-      const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
-      let uuidBayi = []
-      const lsBayi = await get_all_bayi(dt.jwt.token, {})
-      if(lsBayi != null){
-        await _store_data('bayi', lsBayi.data)
-      }
-      const Riwayat = await user_measurmet(dt.jwt.token, {})
-      let R = []
       if(dt != null){
-        dt.user.role == 'masyarakat'? 
-          console.log('disini')
-         : 
-          lsBayi.data.result.map((value, index) => {
-            if (value.posyandu == admin_posyandu.nama) {
-              uuidBayi.push(value.uuid)
+        const posyandu = await get_posyandu(dt.jwt.token, {})
+        const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
+        let uuidBayi = []
+        const lsBayi = await get_all_bayi(dt.jwt.token, {})
+        if(lsBayi != null){
+          await _store_data('bayi', lsBayi.data)
+        }
+        const Riwayat = await user_measurmet(dt.jwt.token, {})
+        let R = []
+        if(dt != null){
+          dt.user.role == 'masyarakat'? 
+            console.log('disini')
+           : 
+            lsBayi.data.result.map((value, index) => {
+              if (value.posyandu == admin_posyandu.nama) {
+                uuidBayi.push(value.uuid)
+              }
+            });
+        }
+        if (Riwayat != null) {
+          Riwayat.data.data.map((value, index) => {
+            if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
+              R.push(value)
             }
+          })
+          setRiwayat(prevRiwayat => {
+            const slicedRiwayat = R.slice(-4);
+            const reversedRiwayat = slicedRiwayat.reverse();
+            return reversedRiwayat;
           });
+        }
+        setUser(dt)
+      }else{
+        setUser(null)
+        setRiwayat(null)
       }
-      if (Riwayat != null) {
-        Riwayat.data.data.map((value, index) => {
-          if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
-            R.push(value)
-          }
-        })
-        setRiwayat(prevRiwayat => {
-          const slicedRiwayat = R.slice(-4);
-          const reversedRiwayat = slicedRiwayat.reverse();
-          return reversedRiwayat;
-        });
-      }
-
-      setUser(dt)
     }
-    fetchData();
-  }, []);
+      fetchData();
+  }, [currentTabIndex]);
 
   if (!fontsLoaded) return null;
   const Submit = async () => {
@@ -254,4 +263,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default  HomeScreen 
+export default  HomeScreen

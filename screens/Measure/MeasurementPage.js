@@ -102,7 +102,8 @@ export default function MeasurementPage(props) {
 
 
         <TouchableOpacity onPress={()=>{
-          if(AGE != 0 && tb !== 0 && TB != 0){
+          if(AGE != 0 && BB !== 0 && TB != 0){
+            console.log('berhasil');
           _store_data('calc', {
             age: AGE,
             tb : TB,

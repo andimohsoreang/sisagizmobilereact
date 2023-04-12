@@ -18,6 +18,7 @@ import LoginScreenUser from './screens/Login';
 import Profile from './screens/Measure/res/Profile';
 import { _retrieve_data } from './backend/handler/storage_handler';
 import { RefreshControl } from 'react-native';
+import MyTabs from './MyTabs';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -41,64 +42,7 @@ export default function App() {
       .finally(() => setRefreshing(false));
   }, []);
 
-  function MyTabs() {
-    return (
-      <Tab.Navigator
-        screenOptions={{
-          tabBarShowLabels: false,
-          headerShown: false,
-        }}
-        >
-        <Tab.Screen
-          options={{
-            tabBarIcon: (props) => (
-              <Feather name="home" size={24} color="black" />
-            ),
-          }}
-          name="Home"
-          component={HomeScreen} />
-        <Tab.Screen
-          name="Pengukuran"
-          component={data != null ? (MeasurementPosyandu) : (LoginScreenUser)}
-          options={{
-            tabBarIcon: (props) => (
-              <Feather name="aperture" size={24} color="black" />
-            ),
-          }} />
-        <Tab.Screen
-          name="Article"
-          component={Article}
-          options={{
-            tabBarIcon: (props) => (
-              <Feather name="book" size={24} color="black" />
-            ),
-          }} />
-
-        {data != null ?
-          (
-            <Tab.Screen
-              name="Profile"
-              component={Profile}
-              options={{
-                tabBarIcon: (props) => (
-                  <Feather name="user" size={24} color="black" />
-                ),
-              }} />
-          )
-          :
-          (
-            <Tab.Screen
-              name="Login"
-              component={LoginScreenUser}
-              options={{
-                tabBarIcon: (props) => (
-                  <Feather name="user" size={24} color="black" />
-                ),
-              }} />
-          )}
-      </Tab.Navigator>
-    );
-  }
+  
   return (
     <NavigationContainer>
       <Stack.Navigator
