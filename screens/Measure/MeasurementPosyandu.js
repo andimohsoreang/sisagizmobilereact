@@ -30,7 +30,6 @@ export default function MeasurementPosyandu(props) {
   const year = currentDate.getFullYear();
   const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
   const day = ("0" + currentDate.getDate()).slice(-2);
-  const [date, setDate] = React.useState(`${year}-${month}-${day}`)
   const [uuid, setuuid] = React.useState('')
   const [age, setAge] = React.useState(0)
   const [bb, setBB] = React.useState(0)

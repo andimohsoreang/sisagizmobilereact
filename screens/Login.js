@@ -5,20 +5,27 @@ import { Login } from '../backend/auth/login'
 import { _store_data, _retrieve_data } from '../backend/handler/storage_handler'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Entypo } from '@expo/vector-icons';
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator ,RefreshControl } from 'react-native'
 import { get_all_bayi } from '../backend/api/all_api'
 
 
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 export default function LoginScreenUser(props) {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [hide, setHide] = React.useState(true)
   const [isData, setIsData] = React.useState(true)
-
   const hide_password = () => {
     setHide(!hide)
   }
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const login_check = async () => {
     setIsData(false)
@@ -30,7 +37,8 @@ export default function LoginScreenUser(props) {
           {}).then((result) => {
             if(result.status == 200){
               _store_data('bayi', result.data)
-              props.navigation.navigate('MeasurementPosyandu')
+              onRefresh()
+              props.navigation.navigate('Home')
             }else{
               console.log(result.message);
             }

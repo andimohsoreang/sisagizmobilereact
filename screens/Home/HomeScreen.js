@@ -19,6 +19,7 @@ export default function HomeScreen(props) {
   });
   const [User, setUser] = React.useState(null)
   const [Riwayat, setRiwayat] = React.useState(null)
+  
   React.useEffect(() => {
     const fetchData = async () => {
       const dt = await _retrieve_data('data')
@@ -29,13 +30,18 @@ export default function HomeScreen(props) {
       if(lsBayi != null){
         await _store_data('bayi', lsBayi.data)
       }
-      lsBayi.data.result.map((value, index) => {
-        if (value.posyandu == admin_posyandu.nama) {
-          uuidBayi.push(value.uuid)
-        }
-      });
       const Riwayat = await user_measurmet(dt.jwt.token, {})
       let R = []
+      if(dt != null){
+        dt.user.role == 'masyarakat'? 
+          console.log('disini')
+         : 
+          lsBayi.data.result.map((value, index) => {
+            if (value.posyandu == admin_posyandu.nama) {
+              uuidBayi.push(value.uuid)
+            }
+          });
+      }
       if (Riwayat != null) {
         Riwayat.data.data.map((value, index) => {
           if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
@@ -48,11 +54,11 @@ export default function HomeScreen(props) {
           return reversedRiwayat;
         });
       }
+
       setUser(dt)
     }
     fetchData();
   }, []);
-
   if (!fontsLoaded) return null;
   const Submit = async () => {
     const dt = await _retrieve_data('data')
@@ -92,7 +98,6 @@ export default function HomeScreen(props) {
               </TouchableOpacity>
               <TouchableOpacity style={styles.menu2} onPress={() => {
                 props.navigation.navigate("MeasurementPage");
-
               }} >
                 <Text>Menu 1</Text>
               </TouchableOpacity>

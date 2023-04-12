@@ -15,22 +15,35 @@ import CalcRes from './screens/Measure/res/CalcRes'
 import MeasureRes from './screens/Measure/res/MeasureRes'
 import PetugasLogin from './screens/PetugasLogin'
 import LoginScreenUser from './screens/Login';
+import Profile from './screens/Measure/res/Profile';
+import { _retrieve_data } from './backend/handler/storage_handler';
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
-  const [data, setData] = React.useState({})
+  const [data, setData] = React.useState(null)
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);  
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const data_user = await _retrieve_data('data');
-      if (data_user != null) {
-        setData(data_user)
+    React.useEffect(() => {
+      const fetchData = async () => {
+        const data_user = await _retrieve_data('data');
+        if (data_user != null) {
+          setData(data_user)
+        }else{
+          setData(null)
+        }
       }
-    }
-    fetchData();
-  }, [])
-
+      fetchData();
+    }, [])
   function MyTabs() {
     return (
       <Tab.Navigator
@@ -69,10 +82,9 @@ export default function App() {
 
         {data != null ?
           (
-
             <Tab.Screen
               name="Profile"
-              component={Article}
+              component={Profile}
               options={{
                 tabBarIcon: (props) => (
                   <Feather name="user" size={24} color="black" />
@@ -82,7 +94,6 @@ export default function App() {
           )
           :
           (
-
             <Tab.Screen
               name="Login"
               component={LoginScreenUser}
@@ -96,7 +107,6 @@ export default function App() {
       </Tab.Navigator>
     );
   }
-
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -133,7 +143,11 @@ export default function App() {
           name="MeasureRes"
           component={MeasureRes}
         />
-       
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Profile"
+          component={Profile}
+        />
         <Stack.Screen name="Article" component={Article} />
       </Stack.Navigator>
     </NavigationContainer>
