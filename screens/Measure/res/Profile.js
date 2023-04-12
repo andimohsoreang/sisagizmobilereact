@@ -43,7 +43,6 @@ export default function Profile(props) {
   {
     const berhasil = await _remove_data('data')
     if(berhasil){
-      
       props.navigation.navigate('Home')
     }
   }

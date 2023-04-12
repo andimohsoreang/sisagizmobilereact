@@ -5,11 +5,11 @@ import Measurment from '../../backend/measurment/measurment';
 import { _get_all_keys_data, _remove_data, _retrieve_data, _store_data } from '../../backend/handler/storage_handler';
 import React from 'react';
 import { get_all_bayi, get_posyandu, user_measurmet } from '../../backend/api/all_api';
+import { NavigationContainer } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 
-export default function HomeScreen(props) {
-
-
+function HomeScreen(props) {
   const [fontsLoaded] = useFonts({
     PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
     PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
@@ -19,7 +19,6 @@ export default function HomeScreen(props) {
   });
   const [User, setUser] = React.useState(null)
   const [Riwayat, setRiwayat] = React.useState(null)
-  
   React.useEffect(() => {
     const fetchData = async () => {
       const dt = await _retrieve_data('data')
@@ -59,6 +58,7 @@ export default function HomeScreen(props) {
     }
     fetchData();
   }, []);
+
   if (!fontsLoaded) return null;
   const Submit = async () => {
     const dt = await _retrieve_data('data')
@@ -70,7 +70,9 @@ export default function HomeScreen(props) {
   }
 
 
+
   return (
+
     <View style={styles.container}>
       <View style={styles.header}>
         <Text
@@ -251,3 +253,5 @@ const styles = StyleSheet.create({
     color: "black",
   }
 });
+
+export default  HomeScreen 

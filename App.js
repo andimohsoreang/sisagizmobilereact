@@ -17,33 +17,30 @@ import PetugasLogin from './screens/PetugasLogin'
 import LoginScreenUser from './screens/Login';
 import Profile from './screens/Measure/res/Profile';
 import { _retrieve_data } from './backend/handler/storage_handler';
-
-const wait = (timeout) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
-
+import { RefreshControl } from 'react-native';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const [data, setData] = React.useState(null)
+  const [isChange, setChange] = React.useState(false)
   const [refreshing, setRefreshing] = React.useState(false);
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);  
 
-    React.useEffect(() => {
-      const fetchData = async () => {
-        const data_user = await _retrieve_data('data');
-        if (data_user != null) {
-          setData(data_user)
-        }else{
-          setData(null)
-        }
-      }
-      fetchData();
-    }, [])
+  const fetchData = async () => {
+    const data_user = await _retrieve_data('data');
+    if (data_user != null) {
+      setData(data_user)
+    } else {
+      setData(null)
+    }
+  }
+
+  React.useEffect(() => {
+    setRefreshing(true);
+    fetchData()
+      .finally(() => setRefreshing(false));
+  }, []);
+
   function MyTabs() {
     return (
       <Tab.Navigator
@@ -51,7 +48,7 @@ export default function App() {
           tabBarShowLabels: false,
           headerShown: false,
         }}
-      >
+        >
         <Tab.Screen
           options={{
             tabBarIcon: (props) => (
@@ -59,17 +56,15 @@ export default function App() {
             ),
           }}
           name="Home"
-          component={HomeScreen}
-        />
+          component={HomeScreen} />
         <Tab.Screen
           name="Pengukuran"
-          component={data!= null? (MeasurementPosyandu) : (LoginScreenUser) }
+          component={data != null ? (MeasurementPosyandu) : (LoginScreenUser)}
           options={{
             tabBarIcon: (props) => (
               <Feather name="aperture" size={24} color="black" />
             ),
-          }}
-        />
+          }} />
         <Tab.Screen
           name="Article"
           component={Article}
@@ -77,8 +72,7 @@ export default function App() {
             tabBarIcon: (props) => (
               <Feather name="book" size={24} color="black" />
             ),
-          }}
-        />
+          }} />
 
         {data != null ?
           (
@@ -89,8 +83,7 @@ export default function App() {
                 tabBarIcon: (props) => (
                   <Feather name="user" size={24} color="black" />
                 ),
-              }}
-            />
+              }} />
           )
           :
           (
@@ -101,8 +94,7 @@ export default function App() {
                 tabBarIcon: (props) => (
                   <Feather name="user" size={24} color="black" />
                 ),
-              }}
-            />
+              }} />
           )}
       </Tab.Navigator>
     );
@@ -116,38 +108,35 @@ export default function App() {
         <Stack.Screen
           options={{ headerShown: false }}
           name="onBoarding"
-          component={OnBoarding}
-        />
+          component={OnBoarding} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="MeasurementPage"
-          component={MeasurementPage}
-        />
+          component={MeasurementPage} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="MeasurementPosyandu"
-          component={MeasurementPosyandu}
-        />
+          component={MeasurementPosyandu} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="Home"
-          component={MyTabs}
-        />
+          component={MyTabs} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="CalcRes"
-          component={CalcRes}
-        />
+          component={CalcRes} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="MeasureRes"
-          component={MeasureRes}
-        />
+          component={MeasureRes} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="Profile"
-          component={Profile}
-        />
+          component={Profile} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreenUser} />
         <Stack.Screen name="Article" component={Article} />
       </Stack.Navigator>
     </NavigationContainer>
