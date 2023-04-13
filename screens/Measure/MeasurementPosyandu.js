@@ -40,6 +40,7 @@ export default function MeasurementPosyandu(props) {
   const [lika, setLika] = React.useState(0)
   const [doSubmit, setDoSubmit] = React.useState(false)
   const [dataBayi, setDataBayi] = React.useState([])
+  const [date, setDate] = React.useState(year + "-" + month + "-" + day)
 
 
   React.useEffect(() => {

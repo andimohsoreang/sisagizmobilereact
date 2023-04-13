@@ -4,7 +4,6 @@ import { NavigationContainer, useRoute } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import OnBoarding from './screens/OnBoarding/OnBoarding';
-import Article from './screens/Article/Article';
 import HomeScreen from './screens/Home/HomeScreen';
 import { Feather } from "@expo/vector-icons";
 import MeasurementPage from './screens/Measure/MeasurementPage'
@@ -20,6 +19,7 @@ import { _retrieve_data } from './backend/handler/storage_handler';
 import { RefreshControl } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Route } from '@react-navigation/native';
+import Article from './backend/article/article';
 
 export default function MyTabs(props) {
     const Stack = createNativeStackNavigator();

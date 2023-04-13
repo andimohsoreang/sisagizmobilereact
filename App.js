@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import OnBoarding from './screens/OnBoarding/OnBoarding';
-import Article from './screens/Article/Article';
 import HomeScreen from './screens/Home/HomeScreen';
 import { Feather } from "@expo/vector-icons";
 import MeasurementPage from './screens/Measure/MeasurementPage'
@@ -19,6 +18,7 @@ import Profile from './screens/Measure/res/Profile';
 import { _retrieve_data } from './backend/handler/storage_handler';
 import { RefreshControl } from 'react-native';
 import MyTabs from './MyTabs';
+import Article from './backend/article/article';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -42,7 +42,6 @@ export default function App() {
       .finally(() => setRefreshing(false));
   }, []);
 
-  
   return (
     <NavigationContainer>
       <Stack.Navigator

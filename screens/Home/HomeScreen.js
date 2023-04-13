@@ -27,20 +27,26 @@ function HomeScreen(props) {
   React.useEffect(() => {
     const fetchData = async () => {
       const dt = await _retrieve_data('data')
-      if(dt != null){
+      if (dt != null) {
         const posyandu = await get_posyandu(dt.jwt.token, {})
         const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
         let uuidBayi = []
         const lsBayi = await get_all_bayi(dt.jwt.token, {})
-        if(lsBayi != null){
+        if (lsBayi != null) {
           await _store_data('bayi', lsBayi.data)
         }
         const Riwayat = await user_measurmet(dt.jwt.token, {})
         let R = []
-        if(dt != null){
-          dt.user.role == 'masyarakat'? 
-            console.log('disini')
-           : 
+        if (dt != null) {
+          dt.user.role == 'masyarakat' ?
+            lsBayi.data.result.map((value, index) => {
+              if (value.Parent.nama_ayah != null) {
+                if (value.Parent.nama_ayah.toLowerCase() == dt.user.name.toLowerCase()) {
+                  uuidBayi.push(value.uuid)
+                }
+              }
+            })
+            :
             lsBayi.data.result.map((value, index) => {
               if (value.posyandu == admin_posyandu.nama) {
                 uuidBayi.push(value.uuid)
@@ -60,12 +66,12 @@ function HomeScreen(props) {
           });
         }
         setUser(dt)
-      }else{
+      } else {
         setUser(null)
         setRiwayat(null)
       }
     }
-      fetchData();
+    fetchData();
   }, [currentTabIndex]);
 
   if (!fontsLoaded) return null;
@@ -112,7 +118,9 @@ function HomeScreen(props) {
               }} >
                 <Text>Menu 1</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu3}>
+              <TouchableOpacity style={styles.menu3} onPress={() => {
+                props.navigation.navigate("Article");
+              }}>
                 <Text>Menu 1</Text>
               </TouchableOpacity>
             </View>
@@ -263,4 +271,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default  HomeScreen
+export default HomeScreen
