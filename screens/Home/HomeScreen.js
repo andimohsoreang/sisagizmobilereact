@@ -110,9 +110,28 @@ function HomeScreen(props) {
           <Text style={styles.menuText}>Menu</Text>
           <View style={{ pading: 10 }}>
             <View style={styles.containerMenu}>
-              <TouchableOpacity style={styles.menu1} onPress={Submit}>
-                <Text>Menu 1</Text>
-              </TouchableOpacity>
+              {User != null ?
+                (
+                  <View>
+                    {User.user.role !== 'masyarakat' ?
+                      (
+                        <TouchableOpacity style={styles.menu1} onPress={Submit}>
+                          <Text>Menu 1</Text>
+                        </TouchableOpacity>
+                      )
+                      :
+                      (
+                        <Text></Text>
+                      )
+                    }
+                  </View>
+                ) :
+                (
+                  <TouchableOpacity style={styles.menu1} onPress={Submit}>
+                    <Text>Menu 1</Text>
+                  </TouchableOpacity>
+                )
+              }
               <TouchableOpacity style={styles.menu2} onPress={() => {
                 props.navigation.navigate("MeasurementPage");
               }} >
@@ -125,7 +144,26 @@ function HomeScreen(props) {
               </TouchableOpacity>
             </View>
             <View style={styles.menuTitle}>
-              <Text style={styles.menuTitle1}>Ukur dan Timbang</Text>
+              {User != null ?
+                (
+                  <View>
+                    {User != null && User.user.role !== 'masyarakat' ?
+                      (
+                        <Text style={styles.menuTitle1}>Ukur dan Timbang</Text>
+                      ) :
+                      (
+                        <Text></Text>
+                      )
+                    }
+                  </View>
+                ) :
+                (
+                  <Text style={styles.menuTitle1}>Ukur dan Timbang</Text>
+
+                )
+
+              }
+
               <Text style={styles.menuTitle2}>Hitung Status Gizi</Text>
               <Text style={styles.menuTitle3}>Artikel</Text>
             </View>
