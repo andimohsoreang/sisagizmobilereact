@@ -173,7 +173,6 @@ function HomeScreen(props) {
           <Text style={styles.riwayatText}>Riwayat</Text>
           <ScrollView horizontal style={{ height: 100 }}>
             <View>
-
               {Riwayat != null ? (
                 <View
                   style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
