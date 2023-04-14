@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
-import React, { useRef } from 'react';  
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
+import React, { useRef } from 'react';
 import {
     LineChart,
     BarChart,
@@ -11,24 +11,39 @@ import {
 import { _retrieve_data, _store_data } from '../handler/storage_handler';
 import { get_growthBy_uuid, get_posyandu } from '../api/all_api';
 import SelectDropdown from 'react-native-select-dropdown';
+import { useFonts } from 'expo-font';
 
 
 export default function Graph() {
-
+    const [color, setColor] = React.useState(['#FFCE81', 'gray', 'gray'])
+    const fontConfig = {
+        PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+        PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
+        PopMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+        PopRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+        PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
+    };
     const [dataBayi, setDataBayi] = React.useState([])
     const [doSubmit, setDoSubmit] = React.useState(false)
     const [doChose, setDoChose] = React.useState(false)
     const [activity, setActivity] = React.useState(false)
     const [uuid, setuuid] = React.useState('')
     const [growth_data, setData] = React.useState([])
-    const dropdownRef = useRef({});  
+    const [year, setYear] = React.useState(null)
+    const [month, setMonth] = React.useState(null)
+    const dropdownRef = useRef({});
     React.useEffect(() => {
         const fetchData = async () => {
             const data_user = await _retrieve_data('data');
             const POSYANDU = await get_posyandu(data_user.jwt.token, {});
             const data = await _retrieve_data('bayi');
-            const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
-            setDataBayi(newDataBayi);
+            if (data_user.user.role !== 'masyrakat') {
+                const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
+                setDataBayi(newDataBayi);
+            } else {
+                const newDataBayi = data.result.filter((value) => value.Parent.uuid === data_user.user.uuid);
+                setDataBayi(newDataBayi)
+            }
         }
         fetchData();
     }, []);
@@ -45,6 +60,10 @@ export default function Graph() {
                     const [year, month, day] = date.split('-');
                     return year;
                 })
+                const month = label.map(date => {
+                    const [year, month, day] = date.split('-');
+                    return month;
+                })
                 const uniqueYears = [...new Set(years)];
                 setUnique(uniqueYears)
                 setData(result.data.data)
@@ -58,105 +77,118 @@ export default function Graph() {
 
     const [allgrowth, setAllGrowth] = React.useState({})
     const [unique, setUnique] = React.useState([])
-    const setGraph = async (year,dt) => {
+    const setGraph = async (year, dt) => {
         const filteredData = dt.filter((value, index) => {
-          return value.date.substring(0, 4) === year
+            return value.date.substring(0, 4) === year
         });
-        
+
         let all_data = {
-          label: filteredData.map((value, index) => { return value.date }),
-          bb: filteredData.map((value, index) => { return value.bb }),
-          tb: filteredData.map((value, index) => { return value.tb }),
-          rekombbu: filteredData.map((value, index) => { return value.rekombbu }),
-          rekomtbu: filteredData.map((value, index) => { return value.rekomtbu }),
-          rekombbtb: filteredData.map((value, index) => { return value.rekombbtb }),
-      
-          bbumin3sd: filteredData.map((value, index) => { return value.bbumin3sd }),
-          bbumin2sd: filteredData.map((value, index) => { return value.bbumin2sd }),
-          bbumin1sd: filteredData.map((value, index) => { return value.bbumin1sd }),
-          bbuplus3sd: filteredData.map((value, index) => { return value.bbuplus3sd }),
-          bbuplus2sd: filteredData.map((value, index) => { return value.bbuplus2sd }),
-          bbuplus1sd: filteredData.map((value, index) => { return value.bbuplus1sd }),
-      
-          tbumin3sd: filteredData.map((value, index) => { return value.tbumin3sd }),
-          tbumin2sd: filteredData.map((value, index) => { return value.tbumin2sd }),
-          tbumin1sd: filteredData.map((value, index) => { return value.tbumin1sd }),
-          tbuplus3sd: filteredData.map((value, index) => { return value.tbuplus3sd }),
-          tbuplus2sd: filteredData.map((value, index) => { return value.tbuplus2sd }),
-          tbuplus1sd: filteredData.map((value, index) => { return value.tbuplus1sd }),
-      
-          bbtbmin3sd: filteredData.map((value, index) => { return value.bbtbmin3sd }),
-          bbtbmin2sd: filteredData.map((value, index) => { return value.bbtbmin2sd }),
-          bbtbmin1sd: filteredData.map((value, index) => { return value.bbtbmin1sd }),
-          bbtbplus3sd: filteredData.map((value, index) => { return value.bbtbplus3sd }),
-          bbtbplus2sd: filteredData.map((value, index) => { return value.bbtbplus2sd }),
-          bbtbplus1sd: filteredData.map((value, index) => { return value.bbtbplus1sd }),
+            label: filteredData.map((value, index) => { return value.date.split('-').slice(1,2)[0] }),
+            bb: filteredData.map((value, index) => { return value.bb }),
+            tb: filteredData.map((value, index) => { return value.tb }),
+            rekombbu: filteredData.map((value, index) => { return value.rekombbu }),
+            rekomtbu: filteredData.map((value, index) => { return value.rekomtbu }),
+            rekombbtb: filteredData.map((value, index) => { return value.rekombbtb }),
+
+            bbumin3sd: filteredData.map((value, index) => { return value.bbumin3sd }),
+            bbumin2sd: filteredData.map((value, index) => { return value.bbumin2sd }),
+            bbumin1sd: filteredData.map((value, index) => { return value.bbumin1sd }),
+            bbuplus3sd: filteredData.map((value, index) => { return value.bbuplus3sd }),
+            bbuplus2sd: filteredData.map((value, index) => { return value.bbuplus2sd }),
+            bbuplus1sd: filteredData.map((value, index) => { return value.bbuplus1sd }),
+
+            tbumin3sd: filteredData.map((value, index) => { return value.tbumin3sd }),
+            tbumin2sd: filteredData.map((value, index) => { return value.tbumin2sd }),
+            tbumin1sd: filteredData.map((value, index) => { return value.tbumin1sd }),
+            tbuplus3sd: filteredData.map((value, index) => { return value.tbuplus3sd }),
+            tbuplus2sd: filteredData.map((value, index) => { return value.tbuplus2sd }),
+            tbuplus1sd: filteredData.map((value, index) => { return value.tbuplus1sd }),
+
+            bbtbmin3sd: filteredData.map((value, index) => { return value.bbtbmin3sd }),
+            bbtbmin2sd: filteredData.map((value, index) => { return value.bbtbmin2sd }),
+            bbtbmin1sd: filteredData.map((value, index) => { return value.bbtbmin1sd }),
+            bbtbplus3sd: filteredData.map((value, index) => { return value.bbtbplus3sd }),
+            bbtbplus2sd: filteredData.map((value, index) => { return value.bbtbplus2sd }),
+            bbtbplus1sd: filteredData.map((value, index) => { return value.bbtbplus1sd }),
         };
         setAllGrowth(all_data)
         setDoChose(true)
-      }
+    }
 
     const screenWidth = Dimensions.get("window").width;
     const chartConfig = {
-        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+        backgroundColor: "#e26a00",
+        backgroundGradientFrom: "#FFCE81",
+        backgroundGradientTo: "#FFCE81",
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        labelColor:  (opacity = 1) => `rgba(0, 0,0, ${opacity})`,
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
-        useShadowColorFromDataset: false // optional
+        useShadowColorFromDataset: true, // optional
     };
 
     const [selected, setSelected] = React.useState(0)
+    const ColorHandler = (i) => {
+        let c = ['gray', 'gray', 'gray']
+        c[i] = '#FFCE81'
+        setColor(c)
+        setSelected(i)
+    }
 
     const data = {
         labels: allgrowth.label,
         datasets: [
             {
-                data: selected == 1? allgrowth.tb: allgrowth.bb ,
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
+                data: selected == 1 ? allgrowth.tb : allgrowth.bb,
+                color: (opacity = 0) => `rgba(0, 0, 255, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             },
             {
-                data: selected == 0? allgrowth.bbumin3sd: (selected == 1? allgrowth.tbumin3sd:allgrowth.bbtbmin3sd),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
+                data: selected == 0 ? allgrowth.bbumin3sd : (selected == 1 ? allgrowth.tbumin3sd : allgrowth.bbtbmin3sd),
+                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+            }, 
+            {
+                data: selected == 0 ? allgrowth.bbumin2sd : (selected == 1 ? allgrowth.tbumin2sd : allgrowth.bbtbmin2sd),
+                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+            },
+            {
+                data: selected == 0 ? allgrowth.bbumin1sd : (selected == 1 ? allgrowth.tbumin1sd : allgrowth.bbtbmin1sd),
+                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }, {
-                data: selected == 0? allgrowth.bbumin3sd: (selected == 1? allgrowth.tbumin2sd:allgrowth.bbtbmin2sd),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
+                data: selected == 0 ? allgrowth.rekombbu : (selected == 1 ? allgrowth.rekomtbu : allgrowth.rekombbtb),
+                color: (opacity = 0) => `rgba(255, 20, 147, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             },
             {
-                data: selected == 0? allgrowth.bbumin3sd: (selected == 1? allgrowth.tbumin1sd:allgrowth.bbtbmin1sd),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
+                data: selected == 0 ? allgrowth.bbuplus1sd : (selected == 1 ? allgrowth.tbuplus1sd : allgrowth.bbtbplus1sd),
+                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }, {
-                data: selected == 0? allgrowth.rekombbu: (selected == 1? allgrowth.rekomtbu:allgrowth.rekombbtb),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
+                data: selected == 0 ? allgrowth.bbuplus2sd : (selected == 1 ? allgrowth.tbuplus2sd : allgrowth.bbtbplus2sd),
+                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             },
             {
-                data: selected == 0? allgrowth.bbuplus1sd: (selected == 1? allgrowth.tbuplus1sd:allgrowth.bbtbplus1sd),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
-                strokeWidth: 2 // optional
-            }, {
-                data: selected == 0? allgrowth.bbuplus2sd: (selected == 1? allgrowth.tbuplus2sd:allgrowth.bbtbplus2sd),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
-                strokeWidth: 2 // optional
-            },
-            {
-                data: selected == 0? allgrowth.bbuplus3sd: (selected == 1? allgrowth.tbuplus3sd:allgrowth.bbtbplus3sd),
-                color: (opacity = 0) => `rgba(134, 65, 244, ${opacity})`, // optional
+                data: selected == 0 ? allgrowth.bbuplus3sd : (selected == 1 ? allgrowth.tbuplus3sd : allgrowth.bbtbplus3sd),
+                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }
         ],
-        legend: [ selected==1? 'TB': 'BB' , '-3 SD', '-2 SD', '-1 SD', 'Median', '+1 SD', '+2 SD', '+3 SD'] // optional
+        legend: [selected == 1 ? 'TB' : 'BB', '-3 SD', '-2 SD', '-1 SD', 'Median', '+1 SD', '+2 SD', '+3 SD'] // optional
     };
     return (
-        <View style={{ marginTop: 200 }}>
-            <View>
+        <View style={{ backgroundColor: '#FFCE81' }}>
+            <View style={{ marginTop: '25%', alignSelf: 'center' }}>
                 <SelectDropdown
+                    buttonStyle={{ borderRadius: 20, width: '80%', marginLeft: '15%', marginRight: '15%', marginBottom: 15 , backgroundColor:'#ECE9E2'}}
+                    buttonTextStyle={{ fontFamily: 'PopBold', backgroundColor:'#ECE9E2' }}
                     defaultButtonText='Pilih Bayi'
                     data={dataBayi.map((value) => { return value.name })}
                     onSelect={(selectedItem, index) => {
-                        if(doSubmit){
+                        if (doSubmit) {
                             dropdownRef.current.reset()
                         }
                         setDoChose(false)
@@ -165,9 +197,14 @@ export default function Graph() {
                     }}
                 />
                 {doSubmit ? (
-                    <View>
+                    <View style={{marginTop:'5%',borderRadius: 20, alignSelf: 'center', backgroundColor: 'white', width: '100%' }}>
+                        <Text style={{marginTop:'5%', marginLeft:'5%', fontSize:20, fontFamily:'PopBold'}}>Waktu Pengukuran</Text>
+                        <View style={{flexDirection:'row'}}>
+
                         <SelectDropdown
-                            defaultButtonText='Pilih Tahun'
+                        buttonStyle={{margin:'5%', borderRadius:15, width: 160}}
+                        buttonTextStyle={{color:'#9C9C9C', fontFamily:'PopMedium'}}
+                            defaultButtonText='Bulan'
                             data={unique}
                             onSelect={(selectedItem, index) => {
                                 setGraph(selectedItem, growth_data)
@@ -175,26 +212,59 @@ export default function Graph() {
                             }}
                             ref={dropdownRef}
                         />
-                    
-                    {doChose ? (
-                        <View>
-                        <LineChart
-                            data={data}
-                            width={screenWidth}
-                            height={220}
-                            chartConfig={chartConfig}
-                        />
                         <SelectDropdown
-                            data={['BB/U', 'TB/U', 'BB/TB']}
-                            defaultValueByIndex={0}
+                         buttonStyle={{margin:'5%', borderRadius:15, width: 150}}
+                         buttonTextStyle={{color:'#9C9C9C', fontFamily:'PopMedium'}}
+                            defaultButtonText='Tahun'
+                            data={unique}
                             onSelect={(selectedItem, index) => {
-                                setSelected(index)
+                                setYear(selectedItem)
                             }}
+                            ref={dropdownRef}
                         />
                         </View>
-                    ) : (
-                        <Text>Pilih Tahun Dulu</Text>
-                    )}
+                        <TouchableOpacity  style={{alignSelf:'center', backgroundColor:'#FFCE81', width:150, borderRadius:20}} onPress={ () => {
+                            setGraph(year,growth_data)
+                            setSelected(0)
+
+                        }}>
+                            <Text style={{fontSize:20, fontFamily:'PopBold', alignSelf:'center', margin:'5%'}}>Cari</Text>
+                        </TouchableOpacity>
+
+                        {doChose ? (
+                            <View>
+                                <LineChart
+                                style={{
+                                    marginVertical: '5%',
+                                    backgroundColor:'white',
+                                    borderRadius:20
+                                }}
+                                    data={data}
+                                    width={screenWidth}
+                                    height={220}
+                                    chartConfig={chartConfig}
+                                />
+                                <View style={{flexDirection:'row', alignSelf:'center', justifyContent:'space-between'}}> 
+                                <TouchableOpacity style={{backgroundColor:color[0], marginRight: '5%', borderRadius: 20}} onPress={ () => {
+                                    ColorHandler(0)
+                                }}>
+                                    <Text style={{ marginRight:'5%', fontFamily:'PopMedium', fontSize:15, textAlign:'center'}}>BB/U</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{backgroundColor:color[1], marginRight:'5%', borderRadius: 20}} onPress={ () => {
+                                    ColorHandler(1)
+                                }}>
+                                    <Text style={{marginRight:'5%', fontFamily:'PopMedium', fontSize:15, textAlign:'center'}}>TB/U</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{backgroundColor:color[2], borderRadius: 20}} onPress={ () => {
+                                    ColorHandler(2)
+                                }}>
+                                    <Text style={{marginRight: '5%', fontFamily:'PopMedium', fontSize:15, textAlign:'center'}}>BB/TB</Text>
+                                </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : (
+                            <Text></Text>
+                        )}
 
                     </View>
                 )
