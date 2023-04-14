@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useRef } from 'react';
 import {
     LineChart,
@@ -9,7 +9,7 @@ import {
     StackedBarChart
 } from "react-native-chart-kit";
 import { _retrieve_data, _store_data } from '../handler/storage_handler';
-import { get_growthBy_uuid, get_posyandu } from '../api/all_api';
+import { get_growthBy_uuid, get_posyandu, user_measurmet } from '../api/all_api';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useFonts } from 'expo-font';
 
@@ -32,11 +32,13 @@ export default function Graph() {
     const [year, setYear] = React.useState(null)
     const [month, setMonth] = React.useState(null)
     const dropdownRef = useRef({});
+    const [yearText, setYearText] = React.useState('')
     React.useEffect(() => {
         const fetchData = async () => {
             const data_user = await _retrieve_data('data');
             const POSYANDU = await get_posyandu(data_user.jwt.token, {});
             const data = await _retrieve_data('bayi');
+            const riwayat = await user_measurmet(data.jwt.token, {})
             if (data_user.user.role !== 'masyrakat') {
                 const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
                 setDataBayi(newDataBayi);
@@ -83,7 +85,7 @@ export default function Graph() {
         });
 
         let all_data = {
-            label: filteredData.map((value, index) => { return value.date.split('-').slice(1,2)[0] }),
+            label: filteredData.map((value, index) => { return value.date.split('-').slice(1, 2)[0] }),
             bb: filteredData.map((value, index) => { return value.bb }),
             tb: filteredData.map((value, index) => { return value.tb }),
             rekombbu: filteredData.map((value, index) => { return value.rekombbu }),
@@ -121,7 +123,7 @@ export default function Graph() {
         backgroundGradientFrom: "#FFCE81",
         backgroundGradientTo: "#FFCE81",
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        labelColor:  (opacity = 1) => `rgba(0, 0,0, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(0, 0,0, ${opacity})`,
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
         useShadowColorFromDataset: true, // optional
@@ -133,6 +135,7 @@ export default function Graph() {
         c[i] = '#FFCE81'
         setColor(c)
         setSelected(i)
+
     }
 
     const data = {
@@ -147,7 +150,7 @@ export default function Graph() {
                 data: selected == 0 ? allgrowth.bbumin3sd : (selected == 1 ? allgrowth.tbumin3sd : allgrowth.bbtbmin3sd),
                 color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
-            }, 
+            },
             {
                 data: selected == 0 ? allgrowth.bbumin2sd : (selected == 1 ? allgrowth.tbumin2sd : allgrowth.bbtbmin2sd),
                 color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
@@ -183,8 +186,10 @@ export default function Graph() {
         <View style={{ backgroundColor: '#FFCE81' }}>
             <View style={{ marginTop: '25%', alignSelf: 'center' }}>
                 <SelectDropdown
-                    buttonStyle={{ borderRadius: 20, width: '80%', marginLeft: '15%', marginRight: '15%', marginBottom: 15 , backgroundColor:'#ECE9E2'}}
-                    buttonTextStyle={{ fontFamily: 'PopBold', backgroundColor:'#ECE9E2' }}
+                    search={true}
+                    searchInputStyle={{ fontFamily: 'PopBold' }}
+                    buttonStyle={{ borderRadius: 20, width: '80%', marginLeft: '15%', marginRight: '15%', marginBottom: 15, backgroundColor: '#ECE9E2' }}
+                    buttonTextStyle={{ fontFamily: 'PopBold', backgroundColor: '#ECE9E2' }}
                     defaultButtonText='Pilih Bayi'
                     data={dataBayi.map((value) => { return value.name })}
                     onSelect={(selectedItem, index) => {
@@ -197,71 +202,86 @@ export default function Graph() {
                     }}
                 />
                 {doSubmit ? (
-                    <View style={{marginTop:'5%',borderRadius: 20, alignSelf: 'center', backgroundColor: 'white', width: '100%' }}>
-                        <Text style={{marginTop:'5%', marginLeft:'5%', fontSize:20, fontFamily:'PopBold'}}>Waktu Pengukuran</Text>
-                        <View style={{flexDirection:'row'}}>
+                    <View style={{ marginTop: '5%', borderRadius: 20, alignSelf: 'center', backgroundColor: 'white', width: '100%' }}>
+                        <Text style={{ marginTop: '5%', marginLeft: '5%', fontSize: 20, fontFamily: 'PopBold' }}>Waktu Pengukuran</Text>
+                        <View style={{ flexDirection: 'row' }}>
 
-                        <SelectDropdown
-                        buttonStyle={{margin:'5%', borderRadius:15, width: 160}}
-                        buttonTextStyle={{color:'#9C9C9C', fontFamily:'PopMedium'}}
-                            defaultButtonText='Bulan'
-                            data={unique}
-                            onSelect={(selectedItem, index) => {
-                                setGraph(selectedItem, growth_data)
-                                setSelected(0)
-                            }}
-                            ref={dropdownRef}
-                        />
-                        <SelectDropdown
-                         buttonStyle={{margin:'5%', borderRadius:15, width: 150}}
-                         buttonTextStyle={{color:'#9C9C9C', fontFamily:'PopMedium'}}
-                            defaultButtonText='Tahun'
-                            data={unique}
-                            onSelect={(selectedItem, index) => {
-                                setYear(selectedItem)
-                            }}
-                            ref={dropdownRef}
-                        />
+                            <SelectDropdown
+                                buttonStyle={{ margin: '5%', borderRadius: 15, width: 160 }}
+                                buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
+                                defaultButtonText='Bulan'
+                                data={["Januari",
+                                    "Februari",
+                                    "Maret",
+                                    "April",
+                                    "Mei",
+                                    "Juni",
+                                    "Juli",
+                                    "Agustus",
+                                    "September",
+                                    "Oktober",
+                                    "November",
+                                    "Desember"]}
+                                onSelect={(selectedItem, index) => {
+                                    setGraph(selectedItem, growth_data)
+                                    setSelected(0)
+                                }}
+                                ref={dropdownRef}
+                            />
+                            <SelectDropdown
+                                search={true}
+                                buttonStyle={{ margin: '5%', borderRadius: 15, width: 150 }}
+                                buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
+                                defaultButtonText='Tahun'
+                                data={unique}
+                                onSelect={(selectedItem, index) => {
+                                    setYear(selectedItem)
+                                }}
+                                ref={dropdownRef}
+                            />
                         </View>
-                        <TouchableOpacity  style={{alignSelf:'center', backgroundColor:'#FFCE81', width:150, borderRadius:20}} onPress={ () => {
-                            setGraph(year,growth_data)
+                        <TouchableOpacity style={{ alignSelf: 'center', backgroundColor: '#FFCE81', width: 150, borderRadius: 20 }} onPress={() => {
+                            setGraph(year, growth_data)
+                            setYearText(year)
                             setSelected(0)
 
                         }}>
-                            <Text style={{fontSize:20, fontFamily:'PopBold', alignSelf:'center', margin:'5%'}}>Cari</Text>
+                            <Text style={{ fontSize: 20, fontFamily: 'PopBold', alignSelf: 'center', margin: '5%' }}>Cari</Text>
                         </TouchableOpacity>
-
                         {doChose ? (
-                            <View>
-                                <LineChart
-                                style={{
-                                    marginVertical: '5%',
-                                    backgroundColor:'white',
-                                    borderRadius:20
-                                }}
-                                    data={data}
-                                    width={screenWidth}
-                                    height={220}
-                                    chartConfig={chartConfig}
-                                />
-                                <View style={{flexDirection:'row', alignSelf:'center', justifyContent:'space-between'}}> 
-                                <TouchableOpacity style={{backgroundColor:color[0], marginRight: '5%', borderRadius: 20}} onPress={ () => {
-                                    ColorHandler(0)
-                                }}>
-                                    <Text style={{ marginRight:'5%', fontFamily:'PopMedium', fontSize:15, textAlign:'center'}}>BB/U</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{backgroundColor:color[1], marginRight:'5%', borderRadius: 20}} onPress={ () => {
-                                    ColorHandler(1)
-                                }}>
-                                    <Text style={{marginRight:'5%', fontFamily:'PopMedium', fontSize:15, textAlign:'center'}}>TB/U</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{backgroundColor:color[2], borderRadius: 20}} onPress={ () => {
-                                    ColorHandler(2)
-                                }}>
-                                    <Text style={{marginRight: '5%', fontFamily:'PopMedium', fontSize:15, textAlign:'center'}}>BB/TB</Text>
-                                </TouchableOpacity>
+                            <ScrollView>
+                                <View>
+                                    <Text style={{ fontFamily: 'PopBold', textAlign: 'center', alignSelf: 'center', marginTop: 25, fontSize: 25 }}>Pengukuran Tahun {yearText}</Text>
+                                    <LineChart
+                                        style={{
+                                            marginVertical: '5%',
+                                            backgroundColor: 'white',
+                                            borderRadius: 20
+                                        }}
+                                        data={data}
+                                        width={screenWidth}
+                                        height={220}
+                                        chartConfig={chartConfig}
+                                    />
+                                    <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'space-between' }}>
+                                        <TouchableOpacity style={{ backgroundColor: color[0], marginRight: '5%', borderRadius: 20 }} onPress={() => {
+                                            ColorHandler(0)
+                                        }}>
+                                            <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>BB/U</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ backgroundColor: color[1], marginRight: '5%', borderRadius: 20 }} onPress={() => {
+                                            ColorHandler(1)
+                                        }}>
+                                            <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>TB/U</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ backgroundColor: color[2], borderRadius: 20 }} onPress={() => {
+                                            ColorHandler(2)
+                                        }}>
+                                            <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>BB/TB</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                            </View>
+                            </ScrollView>
                         ) : (
                             <Text></Text>
                         )}
