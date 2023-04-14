@@ -34,7 +34,7 @@ export default function DetailArticle(props) {
     return (
         <View>
             <TouchableOpacity onPress={() => {
-                props.navigation.navigate("Article")
+                props.navigation.navigate("Article");
             }}>
                 <View style={{ marginTop: '15%', marginLeft: '5%', backgroundColor: 'red', width: 40, height: 40, alignItems: 'center', borderRadius: 20 }}>
                     <View style={{ marginTop: 8 }}>

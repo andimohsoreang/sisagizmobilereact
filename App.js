@@ -20,6 +20,7 @@ import { RefreshControl } from 'react-native';
 import MyTabs from './MyTabs';
 import Article from './backend/article/article';
 import DetailArticle from './screens/Article/DetailArticle';
+import Graph from './backend/growth/graph';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -81,10 +82,14 @@ export default function App() {
           options={{ headerShown: false }}
           name="Login"
           component={LoginScreenUser} />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerShown: false }}
           name="DetailArticle"
           component={DetailArticle} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Graph"
+          component={Graph} />
         <Stack.Screen name="Article" component={Article} />
       </Stack.Navigator>
     </NavigationContainer>

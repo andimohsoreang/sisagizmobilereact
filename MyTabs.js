@@ -20,7 +20,8 @@ import { RefreshControl } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Route } from '@react-navigation/native';
 import Article from './backend/article/article';
-
+import { ActivityIndicator } from 'react-native';
+import Graph from './backend/growth/graph';
 export default function MyTabs(props) {
     const Stack = createNativeStackNavigator();
     const Tab = createBottomTabNavigator();
@@ -60,14 +61,28 @@ export default function MyTabs(props) {
           }}
           name="Home"
           component={HomeScreen} />
-        <Tab.Screen
-          name="Pengukuran"
-          component={data != null ? (MeasurementPosyandu) : (LoginScreenUser)}
-          options={{
-            tabBarIcon: (props) => (
-              <Feather name="aperture" size={24} color="black" />
-            ),
-          }} />
+        {data != null? 
+        (
+          <Tab.Screen
+            name= {data.user.role !== 'masyarakat' ? ("Pengukuran") : ('Status Gizi')}
+            component={data.user.role !== 'masyarakat' ? (MeasurementPosyandu) : (Graph)}
+            options={{
+              tabBarIcon: (props) => (
+                <Feather name="aperture" size={24} color="black" />
+              ),
+            }} />
+        ):
+        (
+          <Tab.Screen
+            name= "Pengukuran"
+            component= {LoginScreenUser}
+            options={{
+              tabBarIcon: (props) => (
+                <Feather name="aperture" size={24} color="black" />
+              ),
+            }} />
+        )
+        }
         <Tab.Screen
           name="Article"
           component={Article}

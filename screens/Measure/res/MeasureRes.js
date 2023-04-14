@@ -26,6 +26,7 @@ const fontConfig = {
 export default function MeasurementPage(props) {
   const [fontsLoaded] = useFonts(fontConfig);
   const [bayi, setBayi] = React.useState(null)
+  const [data_user, setData] = React.useState(null)
   React.useEffect(() => {
     const fetchData = async () => {
       const data_user = await _retrieve_data('data');
@@ -40,6 +41,7 @@ export default function MeasurementPage(props) {
         })
       }
       setBayi(dt)
+      setData(data_user)
     }
     fetchData();
   }, []);
@@ -60,121 +62,129 @@ export default function MeasurementPage(props) {
           <ActivityIndicator />
         )}
       </View>
-        <ScrollView>
-      <View style={styles.menuContainer}>
-        {bayi != null ? (
-          <View>
-            <View style={styles.umur}>
-              <View style={{marginBottom:5}}><Text style={{fontFamily:"PopBold", fontSize:18}}>Detail Pengukuran</Text></View>
-              <Text style={styles.textTitle}>Tanggal pengukuran</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.date}</Text>
+      <ScrollView>
+        <View style={styles.menuContainer}>
+          {bayi != null ? (
+            <View>
+              <View style={styles.umur}>
+                <View style={{ marginBottom: 5 }}><Text style={{ fontFamily: "PopBold", fontSize: 18 }}>Detail Pengukuran</Text></View>
+                <Text style={styles.textTitle}>Tanggal pengukuran</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.date}</Text>
+                </View>
               </View>
+              <View style={styles.beratBadan}>
+                <Text style={styles.textTitle}>Umur</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.current_age} Bulan</Text>
+                </View>
+                <View></View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Berat Badan</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.bb} Kg</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Tinggi Badan</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.tb} Cm</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Status Gizi (BB/U)</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.bbu}</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Status Gizi (TB/U)</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.tbu}</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Status Gizi (BB/TB)</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.bbtb}</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Vitamin</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.vitamin}</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <View style={{ marginBottom: 5 }}><Text style={{ fontFamily: "PopBold", fontSize: 18 }}>Hasil Klasifikasi</Text></View>
+                <Text style={styles.textTitle}>Hasil</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.predict_result == 0 ? ('Normal') : ('Stunting')}</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Probabilitas Stunting</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.predict_accuracy}</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Probabilitas Normal</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>Normal</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Akurasi</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.predict_accuracy * 100} %</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <View style={{ marginBottom: 5 }}><Text style={{ fontFamily: "PopBold", fontSize: 18 }}>Rekomendasi</Text></View>
+                <Text style={styles.textTitle}>Berat Badan (BB/U)</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.rekombbu} Kg</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Tinggi Badan (TB/U)</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
+                </View>
+              </View>
+              <View style={styles.tinggiBadan}>
+                <Text style={styles.textTitle}>Berat Badan (BB/TB)</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
+                </View>
+              </View>
+              {data_user != null ?
+                (
+                  <TouchableOpacity
+                    onPress={() => {
+                      data_user.user.role !== 'masyarakat' ? props.navigation.navigate("MeasurementPosyandu") : props.navigation.navigate("Home")
+                    }}
+                  >
+                    <View style={styles.btn}>
+                      <Text style={{ fontFamily: "PopBold", color: "black" }}>
+                        {data_user.user.role !== 'masyarakat' ? 'Coba Ukur Lagi' : 'Kembali Ke Home'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+                :
+                (
+                  <Text></Text>
+                )
+              }
             </View>
-            <View style={styles.beratBadan}>
-              <Text style={styles.textTitle}>Umur</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.current_age} Bulan</Text>
-              </View>
-              <View></View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Berat Badan</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.bb} Kg</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Tinggi Badan</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.tb} Cm</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Status Gizi (BB/U)</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.bbu}</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Status Gizi (TB/U)</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.tbu}</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Status Gizi (BB/TB)</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.bbtb}</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Vitamin</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.vitamin}</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-            <View style={{marginBottom:5}}><Text style={{fontFamily:"PopBold", fontSize:18}}>Hasil Klasifikasi</Text></View>
-              <Text style={styles.textTitle}>Hasil</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{ bayi.predict_result == 0? ('Normal'): ('Stunting') }</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Probabilitas Stunting</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.predict_accuracy}</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Probabilitas Normal</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>Normal</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Akurasi</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.predict_accuracy * 100} %</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-            <View style={{marginBottom:5}}><Text style={{fontFamily:"PopBold", fontSize:18}}>Rekomendasi</Text></View>
-              <Text style={styles.textTitle}>Berat Badan (BB/U)</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.rekombbu} Kg</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Tinggi Badan (TB/U)</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
-              </View>
-            </View>
-            <View style={styles.tinggiBadan}>
-              <Text style={styles.textTitle}>Berat Badan (BB/TB)</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate("MeasurementPosyandu");
-              }}
-              >
-              <View style={styles.btn}>
-                <Text style={{ fontFamily: "PopBold", color: "black" }}>
-                  Coba Ukur Lagi
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <ActivityIndicator />
+          ) : (
+            <ActivityIndicator />
           )}
-      </View>
-          </ScrollView>
+        </View>
+      </ScrollView>
     </View>
   );
 }

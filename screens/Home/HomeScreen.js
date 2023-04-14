@@ -78,16 +78,25 @@ function HomeScreen(props) {
   const Submit = async () => {
     const dt = await _retrieve_data('data')
     if (dt != null) {
+      if( dt.user.role !== 'masyarakat'){
       props.navigation.navigate('MeasurementPosyandu')
+      }else{
+        props.navigation.navigate('Graph')
+      }
     } else {
       props.navigation.navigate("Login");
     }
   }
 
-
-
+  const click = async (value) => {
+    await _store_data('pengukuran', {
+      uuid: value.Toddler.uuid,
+      date: value.date
+    }).then((result) => {
+      props.navigation.navigate('MeasureRes')
+    })
+  }
   return (
-
     <View style={styles.container}>
       <View style={styles.header}>
         <Text
@@ -112,19 +121,10 @@ function HomeScreen(props) {
             <View style={styles.containerMenu}>
               {User != null ?
                 (
-                  <View>
-                    {User.user.role !== 'masyarakat' ?
-                      (
-                        <TouchableOpacity style={styles.menu1} onPress={Submit}>
-                          <Text>Menu 1</Text>
-                        </TouchableOpacity>
-                      )
-                      :
-                      (
-                        <Text></Text>
-                      )
-                    }
-                  </View>
+                  <TouchableOpacity style={styles.menu1} onPress={Submit}>
+                    <Text>Menu 1</Text>
+                  </TouchableOpacity>
+
                 ) :
                 (
                   <TouchableOpacity style={styles.menu1} onPress={Submit}>
@@ -146,19 +146,13 @@ function HomeScreen(props) {
             <View style={styles.menuTitle}>
               {User != null ?
                 (
-                  <View>
-                    {User != null && User.user.role !== 'masyarakat' ?
-                      (
-                        <Text style={styles.menuTitle1}>Ukur dan Timbang</Text>
-                      ) :
-                      (
-                        <Text></Text>
-                      )
-                    }
-                  </View>
+
+                  <Text style={styles.menuTitle1}>
+                    {User.user.role !== 'masyarakat' ? 'Ukur dan Timbang' : 'Cek Status Gizi'}
+                  </Text>
                 ) :
                 (
-                  <Text style={styles.menuTitle1}>Ukur dan Timbang</Text>
+                  <Text style={styles.menuTitle1}>Cek Status Gizi</Text>
 
                 )
 
@@ -176,7 +170,7 @@ function HomeScreen(props) {
               {Riwayat != null ? (
                 <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
                   {Riwayat.map((value, index) => (
-                    <TouchableOpacity onPress={() => console.log('Item clicked')}>
+                    <TouchableOpacity onPress={() => click(value)}>
                       <View style={styles.boxRiwayat}>
                         <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
                         <Feather
