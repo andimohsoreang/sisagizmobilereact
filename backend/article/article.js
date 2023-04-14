@@ -2,8 +2,9 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, ScrollView,
 import React from 'react'
 import { get_articleBy_category } from '../api/all_api'
 import { useFonts } from 'expo-font';
+import { _store_data } from '../handler/storage_handler';
 
-export default function Article() {
+export default function Article(props) {
   const [fontsLoaded] = useFonts({
     PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
     PopLug: require("../../assets/fonts/Poppins-Light.ttf"),
@@ -36,8 +37,8 @@ export default function Article() {
               createdAt: formattedDate,
               uuid: articleData[i].uuid,
               title: articleData[i].title,
-              body: articleData[i].body
-
+              body: articleData[i].body,
+              user: articleData[i].User
             });
           }
           let new_article = []
@@ -52,7 +53,7 @@ export default function Article() {
               }
             }
           })
-          setArticleData(new_article);
+          setArticleData(new_article.reverse());
         } else {
           console.log("Error fetching data");
         }
@@ -68,16 +69,23 @@ export default function Article() {
     setColor(c)
   }
 
+  const handleArticle =  async (data) => {
+    await _store_data('DetailArticle', data)
+    props.navigation.navigate("DetailArticle")
+  }
+
   return (
     <View style={{ flex: 1 }}>
       {articleData != null ? (
         <View style={{ flex: 1 }}>
           <Text style={{ marginTop: 70, fontFamily: 'PopBold', fontSize: 25, color: '#E9B96F', marginLeft: '6%' }}>Artikel Status Gizi</Text>
-          <View style={styles.container}>
-            <Image source={{ uri: articleData[0].url }} style={styles.image} />
-            <Text style={styles.title}>{articleData[0].title}</Text>
-            <Text style={styles.date}>{articleData[0].createdAt}</Text>
-          </View>
+          <TouchableOpacity onPress={() => handleArticle(articleData[0])}>
+            <View style={styles.container}>
+              <Image source={{ uri: articleData[0].url }} style={styles.image} />
+              <Text style={styles.title}>{articleData[0].title}</Text>
+              <Text style={styles.date}>{articleData[0].createdAt}</Text>
+            </View>
+          </TouchableOpacity>
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <TouchableOpacity onPress={() => {
               handlePress(0)
@@ -102,17 +110,20 @@ export default function Article() {
           <ScrollView vertical style={{ flex: 1 }}>
             {articleData.map((image, index) => (
               index === 0 ? <Text key={index}></Text> :
-                <View style={styles.content} key={index}>
-                  <View style={styles.imageContainer}>
-                    <Image style={styles.logo} source={{ uri: image.url }} />
+                <TouchableOpacity key={index} onPress={() => handleArticle(image)}>
+                  <View style={styles.content}>
+                    <View style={styles.imageContainer}>
+                      <Image style={styles.logo} source={{ uri: image.url }} />
+                    </View>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.img_title}>{image.title}</Text>
+                      <Text style={styles.img_date}>{image.createdAt}</Text>
+                    </View>
                   </View>
-                  <View style={styles.textContainer}>
-                    <Text style={styles.img_title}>{image.title}</Text>
-                    <Text style={styles.img_date}>{image.createdAt}</Text>
-                  </View>
-                </View>
+                </TouchableOpacity>
             ))}
           </ScrollView>
+
 
         </View>
       ) : (
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   imageContainer: {
-   justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
     width: 80,
     height: 75,
@@ -166,6 +177,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 10,
     color: 'black',
+  },
+  logo: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover'
   },
   container: {
     backgroundColor: 'white',
@@ -214,9 +230,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
   },
-  logo: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover'
-  }
+  
 })

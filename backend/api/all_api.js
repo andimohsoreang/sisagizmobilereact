@@ -176,13 +176,10 @@ const get_articleBy_category = async data => {
 
 const get_articleBy_uuid = async data => {
     try {
-        const result = await ApiManager('article', {
+        const result = await ApiManager(`article/${data.uuid}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            params: {
-                uuid: data.uuid
             }
         })
         return result

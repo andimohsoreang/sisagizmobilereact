@@ -174,19 +174,20 @@ function HomeScreen(props) {
           <ScrollView horizontal style={{ height: 100 }}>
             <View>
               {Riwayat != null ? (
-                <View
-                  style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
                   {Riwayat.map((value, index) => (
-                    <View style={styles.boxRiwayat}>
-                      <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
-                      <Feather
-                        name="trending-up"
-                        size={18}
-                        color="green"
-                        style={{ position: "absolute", left: 80, top: 10 }}
-                      />
-                      <Text style={styles.riwayatNama}>{value.Toddler.name}</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => console.log('Item clicked')}>
+                      <View style={styles.boxRiwayat}>
+                        <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
+                        <Feather
+                          name="trending-up"
+                          size={18}
+                          color="green"
+                          style={{ position: "absolute", left: 80, top: 10 }}
+                        />
+                        <Text style={styles.riwayatNama}>{value.Toddler.name}</Text>
+                      </View>
+                    </TouchableOpacity>
                   ))}
                 </View>
               ) : (

@@ -19,6 +19,7 @@ import { _retrieve_data } from './backend/handler/storage_handler';
 import { RefreshControl } from 'react-native';
 import MyTabs from './MyTabs';
 import Article from './backend/article/article';
+import DetailArticle from './screens/Article/DetailArticle';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -80,6 +81,10 @@ export default function App() {
           options={{ headerShown: false }}
           name="Login"
           component={LoginScreenUser} />
+          <Stack.Screen
+          options={{ headerShown: false }}
+          name="DetailArticle"
+          component={DetailArticle} />
         <Stack.Screen name="Article" component={Article} />
       </Stack.Navigator>
     </NavigationContainer>
