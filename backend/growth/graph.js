@@ -14,7 +14,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { useFonts } from 'expo-font';
 
 
-export default function Graph() {
+export default function Graph(props) {
     const [color, setColor] = React.useState(['#FFCE81', 'gray', 'gray'])
     const fontConfig = {
         PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
@@ -33,12 +33,15 @@ export default function Graph() {
     const [month, setMonth] = React.useState(null)
     const dropdownRef = useRef({});
     const [yearText, setYearText] = React.useState('')
+    const [riwayat, setRiwayat] = React.useState(null)
+    const monthRef = useRef({})
     React.useEffect(() => {
         const fetchData = async () => {
             const data_user = await _retrieve_data('data');
             const POSYANDU = await get_posyandu(data_user.jwt.token, {});
             const data = await _retrieve_data('bayi');
-            const riwayat = await user_measurmet(data.jwt.token, {})
+            const riwayat = await user_measurmet(data_user.jwt.token, {})
+            const data_riwayat = riwayat.data.data
             if (data_user.user.role !== 'masyrakat') {
                 const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
                 setDataBayi(newDataBayi);
@@ -46,6 +49,8 @@ export default function Graph() {
                 const newDataBayi = data.result.filter((value) => value.Parent.uuid === data_user.user.uuid);
                 setDataBayi(newDataBayi)
             }
+            console.log(data_riwayat[0]);
+            setRiwayat(data_riwayat)
         }
         fetchData();
     }, []);
@@ -135,8 +140,15 @@ export default function Graph() {
         c[i] = '#FFCE81'
         setColor(c)
         setSelected(i)
-
     }
+    const click = async (value) => {
+        await _store_data('pengukuran', {
+          uuid: value.Toddler.uuid,
+          date: value.date
+        }).then((result) => {
+          props.navigation.navigate('MeasureRes')
+        })
+      }
 
     const data = {
         labels: allgrowth.label,
@@ -202,7 +214,7 @@ export default function Graph() {
                     }}
                 />
                 {doSubmit ? (
-                    <View style={{ marginTop: '5%', borderRadius: 20, alignSelf: 'center', backgroundColor: 'white', width: '100%' }}>
+                    <ScrollView style={{ marginTop: '5%', borderRadius: 20, alignSelf: 'center', backgroundColor: 'white', width: '100%' }}>
                         <Text style={{ marginTop: '5%', marginLeft: '5%', fontSize: 20, fontFamily: 'PopBold' }}>Waktu Pengukuran</Text>
                         <View style={{ flexDirection: 'row' }}>
 
@@ -223,10 +235,15 @@ export default function Graph() {
                                     "November",
                                     "Desember"]}
                                 onSelect={(selectedItem, index) => {
-                                    setGraph(selectedItem, growth_data)
-                                    setSelected(0)
+                                    let month = '';
+                                    if (index < 9) {
+                                      month = '0' + (index + 1); // Add leading zero for single digit month numbers
+                                    } else {
+                                      month = index + 1;
+                                    }
+                                    setMonth(month);
                                 }}
-                                ref={dropdownRef}
+                                ref={monthRef}
                             />
                             <SelectDropdown
                                 search={true}
@@ -244,49 +261,121 @@ export default function Graph() {
                             setGraph(year, growth_data)
                             setYearText(year)
                             setSelected(0)
-
+                            dropdownRef.current.reset()
+                            monthRef.current.reset()
                         }}>
                             <Text style={{ fontSize: 20, fontFamily: 'PopBold', alignSelf: 'center', margin: '5%' }}>Cari</Text>
                         </TouchableOpacity>
                         {doChose ? (
-                            <ScrollView>
-                                <View>
-                                    <Text style={{ fontFamily: 'PopBold', textAlign: 'center', alignSelf: 'center', marginTop: 25, fontSize: 25 }}>Pengukuran Tahun {yearText}</Text>
-                                    <LineChart
-                                        style={{
-                                            marginVertical: '5%',
-                                            backgroundColor: 'white',
-                                            borderRadius: 20
-                                        }}
-                                        data={data}
-                                        width={screenWidth}
-                                        height={220}
-                                        chartConfig={chartConfig}
-                                    />
-                                    <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'space-between' }}>
-                                        <TouchableOpacity style={{ backgroundColor: color[0], marginRight: '5%', borderRadius: 20 }} onPress={() => {
-                                            ColorHandler(0)
-                                        }}>
-                                            <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>BB/U</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ backgroundColor: color[1], marginRight: '5%', borderRadius: 20 }} onPress={() => {
-                                            ColorHandler(1)
-                                        }}>
-                                            <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>TB/U</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ backgroundColor: color[2], borderRadius: 20 }} onPress={() => {
-                                            ColorHandler(2)
-                                        }}>
-                                            <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>BB/TB</Text>
-                                        </TouchableOpacity>
-                                    </View>
+                            <View style={{ paddingBottom: 50 }}>
+                                <Text style={{ fontFamily: 'PopBold', textAlign: 'center', alignSelf: 'center', marginTop: 25, fontSize: 25 }}>Pengukuran Tahun {yearText}</Text>
+                                <LineChart
+                                    style={{
+                                        marginVertical: '5%',
+                                        backgroundColor: 'white',
+                                        borderRadius: 20
+                                    }}
+                                    data={data}
+                                    width={screenWidth}
+                                    height={220}
+                                    chartConfig={chartConfig}
+                                />
+                                <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'space-between' }}>
+                                    <TouchableOpacity style={{ backgroundColor: color[0], marginRight: '5%', borderRadius: 20 }} onPress={() => {
+                                        ColorHandler(0)
+                                    }}>
+                                        <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>BB/U</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ backgroundColor: color[1], marginRight: '5%', borderRadius: 20 }} onPress={() => {
+                                        ColorHandler(1)
+                                    }}>
+                                        <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>TB/U</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ backgroundColor: color[2], borderRadius: 20 }} onPress={() => {
+                                        ColorHandler(2)
+                                    }}>
+                                        <Text style={{ marginRight: '5%', fontFamily: 'PopMedium', fontSize: 15, textAlign: 'center' }}>BB/TB</Text>
+                                    </TouchableOpacity>
                                 </View>
-                            </ScrollView>
+                                {riwayat.map((value, index) => (
+                                    ((value.date.substring(0, 4) === year && value.date.split('-')[1] === month) && value.Toddler.uuid === uuid) || (value.date.substring(0, 4) === year && value.Toddler.uuid === uuid)? (
+                                        <TouchableOpacity onPress={()=>{
+                                            click(value)
+                                        }}>
+                                            <View style={{ margin: '5%', backgroundColor: '#EF986F', borderRadius: 20 }}>
+                                                <Text style={{ alignSelf: 'flex-start', marginLeft: '5%', marginTop: '5%', fontFamily: 'PopBold', fontSize: 15 }}>{value.Toddler.name}</Text>
+                                                <Text style={{ alignSelf: 'flex-start', color: 'gray', marginLeft: '5%', fontFamily: 'PopBold', fontSize: 10 }}>{value.date}</Text>
+                                                <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 10 }}>
+                                                    <View style={{
+                                                        width: 125,
+                                                        backgroundColor: 'white', borderRadius: 25, shadowColor: '#000',
+                                                        shadowOffset: {
+                                                            width: 0,
+                                                            height: 3,
+                                                        },
+                                                        shadowOpacity: 0.30,
+                                                        shadowRadius: 5,
+                                                        elevation: 10,
+                                                    }}>
+                                                        <Text style={{ marginTop: 5, fontFamily: 'PopMedium', color: 'gray', fontSize: 12, textAlign: 'center' }}>Berat Badan</Text>
+                                                        <Text style={{ marginLeft: 10, marginRight: 10, marginBottom: 10, fontFamily: 'PopBold', textAlign: 'center' }}>{value.bb} Kg</Text>
+                                                    </View>
+                                                    <View style={{
+                                                        width: 125,
+                                                        backgroundColor: 'white', borderRadius: 25, marginLeft: 20, shadowColor: '#000',
+                                                        shadowOffset: {
+                                                            width: 0,
+                                                            height: 3,
+                                                        },
+                                                        shadowOpacity: 0.30,
+                                                        shadowRadius: 5,
+                                                        elevation: 10,
+                                                    }}>
+                                                        <Text style={{ marginTop: 5, fontFamily: 'PopMedium', color: 'gray', fontSize: 12, textAlign: 'center' }}>Tinggi Badan</Text>
+                                                        <Text style={{ marginLeft: 10, marginRight: 10, marginBottom: 10, fontFamily: 'PopBold', textAlign: 'center' }}>{value.tb} Cm</Text>
+                                                    </View>
+
+                                                </View>
+                                                <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 10, marginBottom: 15 }}>
+                                                    <View style={{
+                                                        width: 125,
+                                                        backgroundColor: 'white', borderRadius: 25, shadowColor: '#000',
+                                                        shadowOffset: {
+                                                            width: 0,
+                                                            height: 3,
+                                                        },
+                                                        shadowOpacity: 0.30,
+                                                        shadowRadius: 5,
+                                                        elevation: 10,
+                                                    }}>
+                                                        <Text style={{ marginTop: 5, fontFamily: 'PopMedium', color: 'gray', fontSize: 12, textAlign: 'center' }}>Umur</Text>
+                                                        <Text style={{ marginLeft: 10, marginRight: 10, marginBottom: 10, fontFamily: 'PopBold', textAlign: 'center' }}>{value.current_age} Bulan</Text>
+                                                    </View>
+                                                    <View style={{
+                                                        width: 125,
+                                                        backgroundColor: 'white', borderRadius: 25, marginLeft: 20, shadowColor: '#000',
+                                                        shadowOffset: {
+                                                            width: 0,
+                                                            height: 3,
+                                                        },
+                                                        shadowOpacity: 0.30,
+                                                        shadowRadius: 5,
+                                                        elevation: 10,
+                                                    }}>
+                                                        <Text style={{ marginTop: 5, fontFamily: 'PopMedium', color: 'gray', fontSize: 12, textAlign: 'center' }}>Hasil</Text>
+                                                        <Text style={{ marginLeft: 10, marginRight: 10, marginBottom: 10, fontFamily: 'PopBold', textAlign: 'center' }}>{value.predict_result ===0? ('Normal'): ('Stunting') }</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    ) : (null)
+                                ))}
+                            </View>
+
                         ) : (
                             <Text></Text>
                         )}
-
-                    </View>
+                    </ScrollView>
                 )
                     :
                     (
