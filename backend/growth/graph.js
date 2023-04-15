@@ -12,8 +12,6 @@ import { _retrieve_data, _store_data } from '../handler/storage_handler';
 import { get_growthBy_uuid, get_posyandu, user_measurmet } from '../api/all_api';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useFonts } from 'expo-font';
-
-
 export default function Graph(props) {
     const [color, setColor] = React.useState(['#FFCE81', 'gray', 'gray'])
     const fontConfig = {
@@ -143,12 +141,12 @@ export default function Graph(props) {
     }
     const click = async (value) => {
         await _store_data('pengukuran', {
-          uuid: value.Toddler.uuid,
-          date: value.date
+            uuid: value.Toddler.uuid,
+            date: value.date
         }).then((result) => {
-          props.navigation.navigate('MeasureRes')
+            props.navigation.navigate('MeasureRes')
         })
-      }
+    }
 
     const data = {
         labels: allgrowth.label,
@@ -217,7 +215,6 @@ export default function Graph(props) {
                     <ScrollView style={{ marginTop: '5%', borderRadius: 20, alignSelf: 'center', backgroundColor: 'white', width: '100%' }}>
                         <Text style={{ marginTop: '5%', marginLeft: '5%', fontSize: 20, fontFamily: 'PopBold' }}>Waktu Pengukuran</Text>
                         <View style={{ flexDirection: 'row' }}>
-
                             <SelectDropdown
                                 buttonStyle={{ margin: '5%', borderRadius: 15, width: 160 }}
                                 buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
@@ -237,9 +234,9 @@ export default function Graph(props) {
                                 onSelect={(selectedItem, index) => {
                                     let month = '';
                                     if (index < 9) {
-                                      month = '0' + (index + 1); // Add leading zero for single digit month numbers
+                                        month = '0' + (index + 1); // Add leading zero for single digit month numbers
                                     } else {
-                                      month = index + 1;
+                                        month = index + 1;
                                     }
                                     setMonth(month);
                                 }}
@@ -298,8 +295,8 @@ export default function Graph(props) {
                                     </TouchableOpacity>
                                 </View>
                                 {riwayat.map((value, index) => (
-                                    ((value.date.substring(0, 4) === year && value.date.split('-')[1] === month) && value.Toddler.uuid === uuid) || (value.date.substring(0, 4) === year && value.Toddler.uuid === uuid)? (
-                                        <TouchableOpacity onPress={()=>{
+                                    ((value.date.substring(0, 4) === year && value.date.split('-')[1] === month) && value.Toddler.uuid === uuid) || (value.date.substring(0, 4) === year && value.Toddler.uuid === uuid) ? (
+                                        <TouchableOpacity onPress={() => {
                                             click(value)
                                         }}>
                                             <View style={{ margin: '5%', backgroundColor: '#EF986F', borderRadius: 20 }}>
@@ -363,7 +360,7 @@ export default function Graph(props) {
                                                         elevation: 10,
                                                     }}>
                                                         <Text style={{ marginTop: 5, fontFamily: 'PopMedium', color: 'gray', fontSize: 12, textAlign: 'center' }}>Hasil</Text>
-                                                        <Text style={{ marginLeft: 10, marginRight: 10, marginBottom: 10, fontFamily: 'PopBold', textAlign: 'center' }}>{value.predict_result ===0? ('Normal'): ('Stunting') }</Text>
+                                                        <Text style={{ marginLeft: 10, marginRight: 10, marginBottom: 10, fontFamily: 'PopBold', textAlign: 'center' }}>{value.predict_result === 0 ? ('Normal') : ('Stunting')}</Text>
                                                     </View>
                                                 </View>
                                             </View>

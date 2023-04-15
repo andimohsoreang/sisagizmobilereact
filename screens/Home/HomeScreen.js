@@ -9,7 +9,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import { useNavigationState } from '@react-navigation/native';
 
-
 function HomeScreen(props) {
   const [fontsLoaded] = useFonts({
     PopBold: require("../../assets/fonts/Poppins-Bold.ttf"),
@@ -87,7 +86,7 @@ function HomeScreen(props) {
       props.navigation.navigate("Login");
     }
   }
-
+  
   const click = async (value) => {
     await _store_data('pengukuran', {
       uuid: value.Toddler.uuid,
