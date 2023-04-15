@@ -40,14 +40,13 @@ export default function Graph(props) {
             const data = await _retrieve_data('bayi');
             const riwayat = await user_measurmet(data_user.jwt.token, {})
             const data_riwayat = riwayat.data.data
-            if (data_user.user.role !== 'masyrakat') {
+            if (data_user.user.role !== 'masyarakat') {
                 const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
                 setDataBayi(newDataBayi);
             } else {
-                const newDataBayi = data.result.filter((value) => value.Parent.uuid === data_user.user.uuid);
+                const newDataBayi = data.result.filter((value) => value.Parent.nama_ayah.toLowerCase() === data_user.user.name.toLowerCase());
                 setDataBayi(newDataBayi)
             }
-            console.log(data_riwayat[0]);
             setRiwayat(data_riwayat)
         }
         fetchData();
