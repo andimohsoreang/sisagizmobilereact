@@ -28,7 +28,10 @@ export default function Graph(props) {
     const [uuid, setuuid] = React.useState('')
     const [growth_data, setData] = React.useState([])
     const [year, setYear] = React.useState(null)
+
     const [month, setMonth] = React.useState(null)
+    const [currentMonth, setCurrentMonth] = React.useState(null)
+
     const dropdownRef = useRef({});
     const [yearText, setYearText] = React.useState('')
     const [riwayat, setRiwayat] = React.useState(null)
@@ -51,7 +54,7 @@ export default function Graph(props) {
         }
         fetchData();
     }, []);
-
+    const [monthSubmit, setMonthSubmit] = React.useState(false)
     const get_report = async (uuid) => {
         let dt = []
         const data_user = await _retrieve_data('data')
@@ -218,6 +221,7 @@ export default function Graph(props) {
                                 buttonStyle={{ margin: '5%', borderRadius: 15, width: 160 }}
                                 buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
                                 defaultButtonText='Bulan'
+                                defaultValueByIndex={12}
                                 data={["Januari",
                                     "Februari",
                                     "Maret",
@@ -229,15 +233,22 @@ export default function Graph(props) {
                                     "September",
                                     "Oktober",
                                     "November",
-                                    "Desember"]}
+                                    "Desember",
+                                    "Semua"]}
                                 onSelect={(selectedItem, index) => {
-                                    let month = '';
-                                    if (index < 9) {
-                                        month = '0' + (index + 1); // Add leading zero for single digit month numbers
+                                    if (index != 12) {
+                                        console.log('disitu');
+                                        let cmonth = '';
+                                        if (index < 9) {
+                                            cmonth = '0' + (index + 1); // Add leading zero for single digit month numbers
+                                        } else {
+                                            cmonth = index + 1;
+                                        }
+                                        setMonth(cmonth);
                                     } else {
-                                        month = index + 1;
+                                        console.log('yes');
+                                        setMonth(null)
                                     }
-                                    setMonth(month);
                                 }}
                                 ref={monthRef}
                             />
@@ -248,23 +259,16 @@ export default function Graph(props) {
                                 defaultButtonText='Tahun'
                                 data={unique}
                                 onSelect={(selectedItem, index) => {
+                                    setGraph(selectedItem, growth_data)
+                                    setYearText(selectedItem)
                                     setYear(selectedItem)
+                                    setSelected(0)
                                 }}
                                 ref={dropdownRef}
                             />
                         </View>
-                        <TouchableOpacity style={{ alignSelf: 'center', backgroundColor: '#FFCE81', width: 150, borderRadius: 20 }} onPress={() => {
-                            setGraph(year, growth_data)
-                            setYearText(year)
-                            setSelected(0)
-                            dropdownRef.current.reset()
-                            monthRef.current.reset()
-                        }}>
-                            <Text style={{ fontSize: 20, fontFamily: 'PopBold', alignSelf: 'center', margin: '5%' }}>Cari</Text>
-                        </TouchableOpacity>
                         {doChose ? (
                             <View style={{ paddingBottom: 50 }}>
-                                <Text style={{ fontFamily: 'PopBold', textAlign: 'center', alignSelf: 'center', marginTop: 25, fontSize: 25 }}>Pengukuran Tahun {yearText}</Text>
                                 <LineChart
                                     style={{
                                         marginVertical: '5%',
@@ -294,7 +298,7 @@ export default function Graph(props) {
                                     </TouchableOpacity>
                                 </View>
                                 {riwayat.map((value, index) => (
-                                    ((value.date.substring(0, 4) === year && value.date.split('-')[1] === month) && value.Toddler.uuid === uuid) || (value.date.substring(0, 4) === year && value.Toddler.uuid === uuid) ? (
+                                    ((value.date.substring(0, 4) === year && value.date.split('-')[1] === month) && (value.Toddler.uuid === uuid && month !== null)) || (value.date.substring(0, 4) === year && value.Toddler.uuid === uuid && month === null) ? (
                                         <TouchableOpacity onPress={() => {
                                             click(value)
                                         }}>

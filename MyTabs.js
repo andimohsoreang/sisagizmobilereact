@@ -83,14 +83,32 @@ export default function MyTabs(props) {
             }} />
         )
         }
-        <Tab.Screen
-          name="Article"
-          component={Article}
+        {data != null ?
+        (
+          <Tab.Screen
+          name={data.user.role !== 'masyarakat' ? ("Status Gizi") : ('Artikel')}
+          component=
+          {data.user.role !== 'masyarakat' ? (Graph) : (Article)}
           options={{
             tabBarIcon: (props) => (
               <Feather name="book" size={24} color="black" />
             ),
           }} />
+        )
+        :
+        (
+          <Tab.Screen
+          name={'Artikel'}
+          component={Article}
+          options={{
+            tabBarIcon: (props) => (
+              <Feather name="book" size={24} color="black" />
+            ),
+          }} /> 
+        )
+        
+      
+      }
         {data != null ?
           (
             <Tab.Screen

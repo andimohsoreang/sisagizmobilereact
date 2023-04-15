@@ -78,7 +78,7 @@ function HomeScreen(props) {
     const dt = await _retrieve_data('data')
     if (dt != null) {
       if( dt.user.role !== 'masyarakat'){
-      props.navigation.navigate('MeasurementPosyandu')
+        props.navigation.navigate('MeasurementPosyandu')
       }else{
         props.navigation.navigate('Graph')
       }
@@ -86,7 +86,7 @@ function HomeScreen(props) {
       props.navigation.navigate("Login");
     }
   }
-  
+
   const click = async (value) => {
     await _store_data('pengukuran', {
       uuid: value.Toddler.uuid,
@@ -136,11 +136,22 @@ function HomeScreen(props) {
               }} >
                 <Text>Menu 1</Text>
               </TouchableOpacity>
+              {User != null? (
+
               <TouchableOpacity style={styles.menu3} onPress={() => {
-                props.navigation.navigate("Article");
+                props.navigation.navigate(User.user.role != 'masyarakat' ?  'Graph' : 'Article');
               }}>
                 <Text>Menu 1</Text>
               </TouchableOpacity>
+              ): 
+              (
+                <TouchableOpacity style={styles.menu3} onPress={() => {
+                  props.navigation.navigate('Article');
+                }}>
+                  <Text>Menu 1</Text>
+                </TouchableOpacity>
+              )}
+
             </View>
             <View style={styles.menuTitle}>
               {User != null ?
@@ -158,7 +169,13 @@ function HomeScreen(props) {
               }
 
               <Text style={styles.menuTitle2}>Hitung Status Gizi</Text>
-              <Text style={styles.menuTitle3}>Artikel</Text>
+              {User != null? (
+
+                <Text style={styles.menuTitle3}>{User.user.role !== 'masyarakat' ? 'Cek Status Gizi' : 'Artikel'}</Text>
+              ):(
+                <Text style={styles.menuTitle3}>{'Artikel'}</Text>
+                
+              )}
             </View>
           </View>
         </View>
