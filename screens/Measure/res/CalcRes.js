@@ -57,7 +57,7 @@ export default function MeasurementPage(props) {
   if (!fontsLoaded) return <ActivityIndicator />;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={{ fontFamily: "PopBold", fontSize: 20, marginTop: 10 }}>
           Hasil Pengujian Sementara
@@ -69,7 +69,7 @@ export default function MeasurementPage(props) {
       <View>
         {success? (
           <View>
-
+            
           <View style={styles.menuContainer}>
             <View style={styles.umur}>
               <Text style={styles.textTitle}>Umur</Text>
@@ -147,7 +147,7 @@ export default function MeasurementPage(props) {
           </Text>
         </View>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 

@@ -157,7 +157,7 @@ export default function MeasurementPage(props) {
               <View style={styles.tinggiBadan}>
                 <Text style={styles.textTitle}>Berat Badan (BB/TB)</Text>
                 <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.textSatuan}>{bayi.rekomtbu} Cm</Text>
+                  <Text style={styles.textSatuan}>{bayi.rekombbtb} Kg</Text>
                 </View>
               </View>
               {data_user != null ?
