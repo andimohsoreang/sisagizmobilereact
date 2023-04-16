@@ -41,7 +41,7 @@ function HomeScreen(props) {
         if (dt != null) {
           dt.user.role == 'masyarakat' ?
             lsBayi.data.result.map((value, index) => {
-              if (value.Parent.uuid != dt.user.parent_uuid) {
+              if (value.Parent.uuid == dt.user.parent_uuid) {
                 uuidBayi.push(value.uuid)
               }
             })
@@ -52,6 +52,7 @@ function HomeScreen(props) {
               }
             });
         }
+
         if (Riwayat != null) {
           Riwayat.data.data.map((value, index) => {
             if (uuidBayi.indexOf(value.Toddler.uuid) !== -1) {
@@ -217,16 +218,16 @@ function HomeScreen(props) {
         </View>
         <View>
           <Text style={styles.riwayatText}>Riwayat</Text>
-          <ScrollView horizontal style={{ height: 100 }}>
+          <ScrollView horizontal style={{ height: 100, }}>
             <View>
               {Riwayat != null ? (
-                <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                <View style={{ flexDirection: "row"}}>
                   {Riwayat.map((value, index) => (
-                    <TouchableOpacity onPress={() => click(value)}>
+                    <TouchableOpacity  onPress={() => click(value)}>
                       <View style={styles.boxRiwayat}>
                         <Text style={styles.riwayatUmur}>{value.date}</Text>
                         <Feather
-                          name="trending-up"
+                          name={value.predict_result == 0? ('trending-up') : ('trending-down')}
                           size={18}
                           color= {value.predict_result == 0? ('green') : ('red')}
                           style={{ position: "absolute", left: 110, top: 10 }}

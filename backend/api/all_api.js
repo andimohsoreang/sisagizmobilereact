@@ -65,6 +65,7 @@ const user_calculator = async data => {
         })
         return result
     } catch(error) {
+        console.log(error);
         return error.response.data
     }
 }

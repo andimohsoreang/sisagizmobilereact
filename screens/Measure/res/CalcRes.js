@@ -40,6 +40,7 @@ export default function MeasurementPage(props) {
       })
         .then((result) => {
           if (result.status === 200) {
+            console.log(result.data.data);
             setHasilData(result.data.data);
             setData(data);
             setSuccess(true);
@@ -99,37 +100,37 @@ export default function MeasurementPage(props) {
             <View style={styles.tinggiBadan}>
               <Text style={styles.textTitle}>Hasil (BB/U)</Text>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{hasilData.bbu.data.status}</Text>
+                <Text style={styles.textSatuan}>{hasilData.bbu.status}</Text>
               </View>
             </View>
             <View style={styles.tinggiBadan}>
               <Text style={styles.textTitle}>Rekomendasi (BB/U)</Text>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{hasilData.bbu.data.rekom} Kg</Text>
+                <Text style={styles.textSatuan}>{hasilData.bbu.rekom} Kg</Text>
               </View>
             </View>
             <View style={styles.tinggiBadan}>
               <Text style={styles.textTitle}>Hasil (TB/U)</Text>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{hasilData.tbu.data.status}</Text>
+                <Text style={styles.textSatuan}>{hasilData.tbu.status}</Text>
               </View>
             </View>
             <View style={styles.tinggiBadan}>
               <Text style={styles.textTitle}>Rekomendasi (TB/U)</Text>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{hasilData.tbu.data.rekom} Cm</Text>
+                <Text style={styles.textSatuan}>{hasilData.tbu.rekom} Cm</Text>
               </View>
             </View>
             <View style={styles.tinggiBadan}>
               <Text style={styles.textTitle}>Hasil (BB/TB)</Text>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{hasilData.bbtb.data.status}</Text>
+                <Text style={styles.textSatuan}>{hasilData.bbtb.status}</Text>
               </View>
             </View>
             <View style={styles.tinggiBadan}>
               <Text style={styles.textTitle}>Rekmendasi</Text>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textSatuan}>{hasilData.bbtb.data.rekom} Kg</Text>
+                <Text style={styles.textSatuan}>{hasilData.bbtb.rekom} Kg</Text>
               </View>
             </View>
           </View>
