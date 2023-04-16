@@ -67,18 +67,6 @@ export default function Profile(props) {
                 </View>
                 <View></View>
               </View>
-              <View style={styles.beratBadan}>
-                <Text style={styles.textTitle}>Berat Badan</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.textSatuan}>sajso Kg</Text>
-                </View>
-              </View>
-              <View style={styles.tinggiBadan}>
-                <Text style={styles.textTitle}>Tinggi Basojaojs</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.textSatuan}>aijsoiajCm</Text>
-                </View>
-              </View>
               <TouchableOpacity onPress={Submit}>
                 <View style={styles.btn}>
                   <Text style={{ fontFamily: "PopBold", color: "black" }}>

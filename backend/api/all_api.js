@@ -114,7 +114,6 @@ const user_measurmentBy_uuid = async (token, data) => {
                 'Authorization': `Bearer ${token}`
             },
             params: {
-
             }
         })
         return result

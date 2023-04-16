@@ -13,6 +13,8 @@ import SelectDropdown from "react-native-select-dropdown";
 import { _store_data, _retrieve_data, _get_all_keys_data } from "../../backend/handler/storage_handler";
 import { get_posyandu } from "../../backend/api/all_api";
 import { post_measurment } from "../../backend/api/all_api";
+import { Entypo, FontAwesome, MaterialCommunityIcons,  } from '@expo/vector-icons';
+
 
 // Move the useFonts hook outside of the component function
 const fontConfig = {
@@ -46,9 +48,8 @@ export default function MeasurementPosyandu(props) {
   React.useEffect(() => {
     const fetchData = async () => {
       const data_user = await _retrieve_data('data');
-      const POSYANDU = await get_posyandu(data_user.jwt.token, {});
       const data = await _retrieve_data('bayi');
-      const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
+      const newDataBayi = data.result.filter((value) => value.Posyandu.uuid === data_user.user.posyandu_uuid);
       setDataBayi(newDataBayi);
     }
     fetchData();
@@ -62,7 +63,6 @@ export default function MeasurementPosyandu(props) {
         age: Number(age),
         bb: Number(bb),
         tb: Number(tb),
-        method: method,
         vitamin: vitamin,
         lila: Number(lila),
         lika: Number(lika),
@@ -76,11 +76,17 @@ export default function MeasurementPosyandu(props) {
           props.navigation.navigate('MeasureRes')
         })
       } else {
-          alert(result.message);
+        alert(result.message);
       }
     } catch (err) {
       alert(err);
     }
+  }
+
+  const dropIcon = () =>{
+    return(
+      <Feather name="arrow-down-circle" size={25} color="black" />
+    )
   }
 
 
@@ -93,15 +99,23 @@ export default function MeasurementPosyandu(props) {
           Pilih Anak
         </Text>
         <SelectDropdown
+          dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+          rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+          selectedRowTextStyle={{ color: 'white' }}
+          selectedRowStyle={{ backgroundColor: '#FFCE81' }}
+          renderDropdownIcon={dropIcon}
+
+          buttonStyle={{ backgroundColor: 'white', borderRadius: 20, alignSelf: 'center', width: '70%', marginTop: 20 }}
+          buttonTextStyle={{ fontFamily: 'PopBold', fontSize: 15, textAlign: 'center' }}
           defaultButtonText='Pilih Bayi'
-          data={dataBayi.map((value) => { return value.name })}
+          data={dataBayi.map((value) => { return value.name.split(' ')[0] + ' - ' + value.Parent.no_kk })}
           onSelect={(selectedItem, index) => {
             setuuid(dataBayi[index].uuid)
             setDoSubmit(true)
           }}
         />
       </View>
-      <ScrollView>
+      <ScrollView style={{ marginTop: 20 }}>
         {doSubmit ? (
           <View style={styles.menuContainer}>
             <View style={{ flexDirection: 'row' }}>
@@ -124,7 +138,7 @@ export default function MeasurementPosyandu(props) {
                   placeholder='Umur'
                   onChangeText={setAge}
                   value={String(age)} />
-                <Text>Bulan</Text>
+                <Text style={styles.sideTxt}>Bulan</Text>
               </View>
             </View>
             <View style={styles.umur}>
@@ -135,7 +149,7 @@ export default function MeasurementPosyandu(props) {
                   placeholder='Berat Badan'
                   onChangeText={setBB}
                   value={String(bb)} />
-                <Text>Kg</Text>
+                <Text style={styles.sideTxt}>Kg</Text>
               </View>
             </View>
             <View style={styles.umur}>
@@ -146,7 +160,7 @@ export default function MeasurementPosyandu(props) {
                   placeholder='Tinggi Badan'
                   onChangeText={setTB}
                   value={String(tb)} />
-                <Text>Cm</Text>
+                <Text style={styles.sideTxt}>Cm</Text>
               </View>
             </View>
             <View>
@@ -157,7 +171,7 @@ export default function MeasurementPosyandu(props) {
                     placeholder='Lingkar Lengan'
                     onChangeText={setLila}
                     value={String(lila)} />
-                  <Text>Cm</Text>
+                  <Text style={styles.sideTxt}>Cm</Text>
                 </View>
               </View>
               <View style={styles.umur}>
@@ -167,25 +181,25 @@ export default function MeasurementPosyandu(props) {
                     placeholder='Lingkar Kaki'
                     onChangeText={setLika}
                     value={String(lika)} />
-                  <Text>Cm</Text>
-                </View>
-              </View>
-              <View style={styles.umur}>
-                <Text style={styles.textTitle}>Cara Ukur</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <SelectDropdown
-                    defaultValue={'Terlentang'}
-                    data={['Terlentang', 'Berdiri']}
-                    onSelect={(selectedItem, index) => {
-                      setMethod(selectedItem)
-                    }}
-                  />
+                  <Text style={styles.sideTxt}>Cm</Text>
                 </View>
               </View>
               <View style={styles.umur}>
                 <Text style={styles.textTitle}>Vitamin A</Text>
                 <View style={{ flexDirection: "row" }}>
                   <SelectDropdown
+
+                    dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+                    rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+                    selectedRowTextStyle={{ color: 'white' }}
+                    selectedRowStyle={{ backgroundColor: '#FFCE81' }}
+                    renderDropdownIcon={dropIcon}
+
+                    
+                    buttonStyle={{borderRadius:20, width: 145, marginTop: 10}}
+                    buttonTextStyle={{}}
+
+
                     defaultValue={'Ya'}
                     data={['Ya', 'Tidak']}
                     onSelect={(selectedItem, index) => {
@@ -215,7 +229,10 @@ export default function MeasurementPosyandu(props) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFCE81" },
   header: { paddingTop: 60, paddingLeft: 20 },
-
+  sideTxt: {
+    marginLeft: 20,
+    alignSelf:'center'
+  },  
   menuContainer: {
     marginTop: 45,
     borderRadius: 30,

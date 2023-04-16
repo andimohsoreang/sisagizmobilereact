@@ -31,8 +31,6 @@ function HomeScreen(props) {
     const fetchData = async () => {
       const dt = await _retrieve_data('data')
       if (dt != null) {
-        const posyandu = await get_posyandu(dt.jwt.token, {})
-        const admin_posyandu = posyandu.data.data[1 - dt.user.posyanduId]
         let uuidBayi = []
         const lsBayi = await get_all_bayi(dt.jwt.token, {})
         if (lsBayi != null) {
@@ -43,15 +41,13 @@ function HomeScreen(props) {
         if (dt != null) {
           dt.user.role == 'masyarakat' ?
             lsBayi.data.result.map((value, index) => {
-              if (value.Parent.nama_ayah != null) {
-                if (value.Parent.nama_ayah.toLowerCase() == dt.user.name.toLowerCase()) {
-                  uuidBayi.push(value.uuid)
-                }
+              if (value.Parent.uuid != dt.user.parent_uuid) {
+                uuidBayi.push(value.uuid)
               }
             })
             :
             lsBayi.data.result.map((value, index) => {
-              if (value.posyandu == admin_posyandu.nama) {
+              if (value.Posyandu.uuid == dt.user.posyandu_uuid) {
                 uuidBayi.push(value.uuid)
               }
             });
@@ -187,7 +183,7 @@ function HomeScreen(props) {
                   <TouchableOpacity style={styles.menu3} onPress={() => {
                     props.navigation.navigate('Article');
                   }}>
-                    <Text>Menu 1</Text>
+                    <FontAwesome name="book" size={35} color="white" />
                   </TouchableOpacity>
                 )}
 
@@ -228,12 +224,12 @@ function HomeScreen(props) {
                   {Riwayat.map((value, index) => (
                     <TouchableOpacity onPress={() => click(value)}>
                       <View style={styles.boxRiwayat}>
-                        <Text style={styles.riwayatUmur}>{value.current_age} Bulan</Text>
+                        <Text style={styles.riwayatUmur}>{value.date}</Text>
                         <Feather
                           name="trending-up"
                           size={18}
-                          color="green"
-                          style={{ position: "absolute", left: 80, top: 10 }}
+                          color= {value.predict_result == 0? ('green') : ('red')}
+                          style={{ position: "absolute", left: 110, top: 10 }}
                         />
                         <Text style={styles.riwayatNama}>{value.Toddler.name}</Text>
                       </View>
@@ -252,14 +248,14 @@ function HomeScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFCE81", top: -380 },
-  header: { paddingTop: 60, paddingLeft: 20, top: 10 },
+  container: { flex: 1, backgroundColor: "#FFCE81", top: -350 },
+  header: { paddingTop: 60, paddingLeft: 20, top: -5 },
   banner: {
     position: "absolute",
     width: 340,
     height: 140,
     backgroundColor: "#FFEDD0",
-    top: 600,
+    top: 580,
     right: 37,
     zIndex: 1,
     borderRadius: 10,
@@ -341,6 +337,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   boxRiwayat: {
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    width: 150,
     backgroundColor: "#FFFFFF",
     padding: 20,
     borderRadius: 10,

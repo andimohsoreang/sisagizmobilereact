@@ -12,6 +12,8 @@ import { _retrieve_data, _store_data } from '../handler/storage_handler';
 import { get_growthBy_uuid, get_posyandu, user_measurmet } from '../api/all_api';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useFonts } from 'expo-font';
+import { Feather } from "@expo/vector-icons";
+
 export default function Graph(props) {
     const [color, setColor] = React.useState(['#FFCE81', 'gray', 'gray'])
     const fontConfig = {
@@ -39,15 +41,14 @@ export default function Graph(props) {
     React.useEffect(() => {
         const fetchData = async () => {
             const data_user = await _retrieve_data('data');
-            const POSYANDU = await get_posyandu(data_user.jwt.token, {});
             const data = await _retrieve_data('bayi');
             const riwayat = await user_measurmet(data_user.jwt.token, {})
             const data_riwayat = riwayat.data.data
             if (data_user.user.role !== 'masyarakat') {
-                const newDataBayi = data.result.filter((value) => value.posyandu === POSYANDU.data.data[1 - (data_user.user.posyanduId)].nama);
+                const newDataBayi = data.result.filter((value) => value.Posyandu.uuid === data_user.user.posyandu_uuid);
                 setDataBayi(newDataBayi);
             } else {
-                const newDataBayi = data.result.filter((value) => value.Parent.nama_ayah.toLowerCase() === data_user.user.name.toLowerCase());
+                const newDataBayi = data.result.filter((value) => value.Parent.uuid === data_user.user.parent_uuid);
                 setDataBayi(newDataBayi)
             }
             setRiwayat(data_riwayat)
@@ -150,6 +151,12 @@ export default function Graph(props) {
         })
     }
 
+    const dropIcon = () =>{
+        return(
+          <Feather name="arrow-down-circle" size={25} color="black" />
+        )
+      }
+
     const data = {
         labels: allgrowth.label,
         datasets: [
@@ -160,17 +167,17 @@ export default function Graph(props) {
             },
             {
                 data: selected == 0 ? allgrowth.bbumin3sd : (selected == 1 ? allgrowth.tbumin3sd : allgrowth.bbtbmin3sd),
-                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                color: (opacity = 0) => `rgba(255,255,204, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             },
             {
                 data: selected == 0 ? allgrowth.bbumin2sd : (selected == 1 ? allgrowth.tbumin2sd : allgrowth.bbtbmin2sd),
-                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                color: (opacity = 0) => `rgba(255,255,153, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             },
             {
                 data: selected == 0 ? allgrowth.bbumin1sd : (selected == 1 ? allgrowth.tbumin1sd : allgrowth.bbtbmin1sd),
-                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                color: (opacity = 0) => `rgba(255,255,102, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }, {
                 data: selected == 0 ? allgrowth.rekombbu : (selected == 1 ? allgrowth.rekomtbu : allgrowth.rekombbtb),
@@ -179,16 +186,16 @@ export default function Graph(props) {
             },
             {
                 data: selected == 0 ? allgrowth.bbuplus1sd : (selected == 1 ? allgrowth.tbuplus1sd : allgrowth.bbtbplus1sd),
-                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                color: (opacity = 0) => `rgba(204,204,0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }, {
                 data: selected == 0 ? allgrowth.bbuplus2sd : (selected == 1 ? allgrowth.tbuplus2sd : allgrowth.bbtbplus2sd),
-                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                color: (opacity = 0) => `rgba(153,153,0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             },
             {
                 data: selected == 0 ? allgrowth.bbuplus3sd : (selected == 1 ? allgrowth.tbuplus3sd : allgrowth.bbtbplus3sd),
-                color: (opacity = 0) => `rgba(255, 255, 0, ${opacity})`, // optional
+                color: (opacity = 0) => `rgba(102,102,0, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }
         ],
@@ -199,11 +206,19 @@ export default function Graph(props) {
             <View style={{ marginTop: '25%', alignSelf: 'center' }}>
                 <SelectDropdown
                     search={true}
+
+
+                    dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+                    rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+                    selectedRowTextStyle={{ color: 'white' }}
+                    selectedRowStyle={{ backgroundColor: '#FFCE81' }}
+                    renderDropdownIcon={dropIcon}
+                    buttonStyle={{ borderRadius: 20, width: '80%', marginLeft: '15%', marginRight: '15%', marginBottom: 15, backgroundColor: 'white', borderColor: '#603802', borderWidth: 1 }}
+                    buttonTextStyle={{ fontFamily: 'PopBold', fontSize: 15 }}
+
                     searchInputStyle={{ fontFamily: 'PopBold' }}
-                    buttonStyle={{ borderRadius: 20, width: '80%', marginLeft: '15%', marginRight: '15%', marginBottom: 15, backgroundColor: '#ECE9E2' }}
-                    buttonTextStyle={{ fontFamily: 'PopBold', backgroundColor: '#ECE9E2' }}
                     defaultButtonText='Pilih Bayi'
-                    data={dataBayi.map((value) => { return value.name })}
+                    data={dataBayi.map((value) => { return value.name.split(' ')[0] + ' - ' + value.Parent.no_kk })}
                     onSelect={(selectedItem, index) => {
                         if (doSubmit) {
                             dropdownRef.current.reset()
@@ -218,9 +233,14 @@ export default function Graph(props) {
                         <Text style={{ marginTop: '5%', marginLeft: '5%', fontSize: 20, fontFamily: 'PopBold' }}>Waktu Pengukuran</Text>
                         <View style={{ flexDirection: 'row' }}>
                             <SelectDropdown
+                                dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+                                rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+                                selectedRowTextStyle={{ color: 'white' }}
+                                selectedRowStyle={{ backgroundColor: '#FFCE81' }}
                                 buttonStyle={{ margin: '5%', borderRadius: 15, width: 160 }}
                                 buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
                                 defaultButtonText='Bulan'
+                                renderDropdownIcon={dropIcon}
                                 defaultValueByIndex={12}
                                 data={["Januari",
                                     "Februari",
@@ -253,7 +273,12 @@ export default function Graph(props) {
                                 ref={monthRef}
                             />
                             <SelectDropdown
+                                dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+                                rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+                                selectedRowTextStyle={{ color: 'white' }}
+                                selectedRowStyle={{ backgroundColor: '#FFCE81' }}
                                 search={true}
+                                renderDropdownIcon={dropIcon}
                                 buttonStyle={{ margin: '5%', borderRadius: 15, width: 150 }}
                                 buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
                                 defaultButtonText='Tahun'
@@ -302,10 +327,10 @@ export default function Graph(props) {
                                         <TouchableOpacity onPress={() => {
                                             click(value)
                                         }}>
-                                            <View style={{ margin: '5%', backgroundColor: '#EF986F', borderRadius: 20 }}>
+                                            <View style={{ margin: '5%', backgroundColor: '#FFCE81', borderRadius: 20 }}>
                                                 <Text style={{ alignSelf: 'flex-start', marginLeft: '5%', marginTop: '5%', fontFamily: 'PopBold', fontSize: 15 }}>{value.Toddler.name}</Text>
                                                 <Text style={{ alignSelf: 'flex-start', color: 'gray', marginLeft: '5%', fontFamily: 'PopBold', fontSize: 10 }}>{value.date}</Text>
-                                                <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 10 }}>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
                                                     <View style={{
                                                         width: 125,
                                                         backgroundColor: 'white', borderRadius: 25, shadowColor: '#000',
@@ -336,7 +361,7 @@ export default function Graph(props) {
                                                     </View>
 
                                                 </View>
-                                                <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 10, marginBottom: 15 }}>
+                                                <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 15, justifyContent: 'center' }}>
                                                     <View style={{
                                                         width: 125,
                                                         backgroundColor: 'white', borderRadius: 25, shadowColor: '#000',

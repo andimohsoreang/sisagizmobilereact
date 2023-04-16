@@ -124,18 +124,6 @@ export default function MeasurementPage(props) {
                 </View>
               </View>
               <View style={styles.tinggiBadan}>
-                <Text style={styles.textTitle}>Probabilitas Stunting</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.textSatuan}>{bayi.predict_accuracy}</Text>
-                </View>
-              </View>
-              <View style={styles.tinggiBadan}>
-                <Text style={styles.textTitle}>Probabilitas Normal</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.textSatuan}>Normal</Text>
-                </View>
-              </View>
-              <View style={styles.tinggiBadan}>
                 <Text style={styles.textTitle}>Akurasi</Text>
                 <View style={{ flexDirection: "row" }}>
                   <Text style={styles.textSatuan}>{bayi.predict_accuracy * 100} %</Text>
