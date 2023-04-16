@@ -76,6 +76,7 @@ export default function MeasurementPosyandu(props) {
           props.navigation.navigate('MeasureRes')
         })
       } else {
+        console.log(result);
         alert(result.message);
       }
     } catch (err) {
@@ -105,10 +106,10 @@ export default function MeasurementPosyandu(props) {
           selectedRowStyle={{ backgroundColor: '#FFCE81' }}
           renderDropdownIcon={dropIcon}
 
-          buttonStyle={{ backgroundColor: 'white', borderRadius: 20, alignSelf: 'center', width: '70%', marginTop: 20 }}
-          buttonTextStyle={{ fontFamily: 'PopBold', fontSize: 15, textAlign: 'center' }}
+          buttonStyle={{ backgroundColor: 'white', borderRadius: 20, alignSelf: 'center', width: '90%', marginTop: 20 }}
+          buttonTextStyle={{ fontFamily: 'PopBold', fontSize: 12, textAlign: 'center' }}
           defaultButtonText='Pilih Bayi'
-          data={dataBayi.map((value) => { return value.name.split(' ')[0] + ' - ' + value.Parent.no_kk })}
+          data={dataBayi.map((value) => {  return value.name.split(' ')[0] + ' (' + value.jk + ')' + ' - ' + value.Parent.no_kk })}
           onSelect={(selectedItem, index) => {
             setuuid(dataBayi[index].uuid)
             setDoSubmit(true)

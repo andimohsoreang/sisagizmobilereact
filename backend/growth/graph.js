@@ -214,13 +214,13 @@ export default function Graph(props) {
                     selectedRowStyle={{ backgroundColor: '#FFCE81' }}
                     renderDropdownIcon={dropIcon}
                     buttonStyle={{ borderRadius: 20, width: '80%', marginLeft: '15%', marginRight: '15%', marginBottom: 15, backgroundColor: 'white', borderColor: '#603802', borderWidth: 1 }}
-                    buttonTextStyle={{ fontFamily: 'PopBold', fontSize: 15 }}
+                    buttonTextStyle={{ fontFamily: 'PopBold', fontSize: 12 }}
 
                     searchInputStyle={{ fontFamily: 'PopBold' }}
                     defaultButtonText='Pilih Bayi'
-                    data={dataBayi.map((value) => { return value.name.split(' ')[0] + ' - ' + value.Parent.no_kk })}
+                    data={dataBayi.map((value) => { return value.name.split(' ')[0] + ' (' + value.jk + ')' + ' - ' + value.Parent.no_kk })}
                     onSelect={(selectedItem, index) => {
-                        if (doSubmit) {
+                        if (doSubmit) { 
                             dropdownRef.current.reset()
                         }
                         setDoChose(false)
@@ -237,8 +237,8 @@ export default function Graph(props) {
                                 rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
                                 selectedRowTextStyle={{ color: 'white' }}
                                 selectedRowStyle={{ backgroundColor: '#FFCE81' }}
-                                buttonStyle={{ margin: '5%', borderRadius: 15, width: 160 }}
-                                buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium' }}
+                                buttonStyle={{ margin: '5%', borderRadius: 15, width: 160, }}
+                                buttonTextStyle={{ color: '#9C9C9C', fontFamily: 'PopMedium',}}
                                 defaultButtonText='Bulan'
                                 renderDropdownIcon={dropIcon}
                                 defaultValueByIndex={12}

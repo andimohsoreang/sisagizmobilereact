@@ -21,6 +21,12 @@ const fontConfig = {
   PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
 };
 
+const dropIcon = () =>{
+  return(
+    <Feather name="arrow-down-circle" size={25} color="black" />
+  )
+}
+
 export default function MeasurementPage(props) {
   const [AGE, setAge] = React.useState(0)
     const [BB, setBB] = React.useState(0)
@@ -91,6 +97,12 @@ export default function MeasurementPage(props) {
           <Text style={styles.textTitle}>Jenis Kelamin</Text>
           <View style={{ flexDirection: "row" }}>
           <SelectDropdown 
+          buttonStyle={{borderRadius: 20}}
+          dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+          rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+          selectedRowTextStyle={{ color: 'white' }}
+          selectedRowStyle={{ backgroundColor: '#FFCE81' }}
+          renderDropdownIcon={dropIcon}
                 defaultValueByIndex={0}
                 data={['Laki-laki', 'Perempuan']}
                 onSelect={(selectedItem, index) => {
@@ -103,7 +115,6 @@ export default function MeasurementPage(props) {
 
         <TouchableOpacity onPress={()=>{
           if(AGE != 0 && BB !== 0 && TB != 0){
-            console.log('berhasil');
           _store_data('calc', {
             age: AGE,
             tb : TB,
