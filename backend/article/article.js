@@ -108,20 +108,25 @@ export default function Article(props) {
 
           </View>
           <ScrollView vertical style={{ flex: 1 }}>
-            {articleData.map((image, index) => (
-              index === 0 ? <Text key={index}></Text> :
-                <TouchableOpacity key={index} onPress={() => handleArticle(image)}>
-                  <View style={styles.content}>
-                    <View style={styles.imageContainer}>
-                      <Image style={styles.logo} source={{ uri: image.url }} />
+            {articleData != null? (
+              articleData.map((image, index) => (
+                index === 0 ? <Text key={index}></Text> :
+                  <TouchableOpacity key={index} onPress={() => handleArticle(image)}>
+                    <View style={styles.content}>
+                      <View style={styles.imageContainer}>
+                        <Image style={styles.logo} source={{ uri: image.url }} />
+                      </View>
+                      <View style={styles.textContainer}>
+                        <Text style={styles.img_title}>{image.title}</Text>
+                        <Text style={styles.img_date}>{image.createdAt}</Text>
+                      </View>
                     </View>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.img_title}>{image.title}</Text>
-                      <Text style={styles.img_date}>{image.createdAt}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-            ))}
+                  </TouchableOpacity>
+              ))
+            )
+            : (
+              <Text>Data Blm Ada</Text>
+            )}
           </ScrollView>
 
 

@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, View, ScrollView } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'react-native'
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
 import Measurment from '../../backend/measurment/measurment';
@@ -8,6 +8,10 @@ import { get_all_bayi, get_posyandu, user_measurmet } from '../../backend/api/al
 import { NavigationContainer } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import { useNavigationState } from '@react-navigation/native';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
+import { SvgUri } from 'react-native-svg';
+import homeSvg from '../../assets/homeSvg.svg'
+import Logo from './Logo';
 
 function HomeScreen(props) {
   const [fontsLoaded] = useFonts({
@@ -77,9 +81,9 @@ function HomeScreen(props) {
   const Submit = async () => {
     const dt = await _retrieve_data('data')
     if (dt != null) {
-      if( dt.user.role !== 'masyarakat'){
+      if (dt.user.role !== 'masyarakat') {
         props.navigation.navigate('MeasurementPosyandu')
-      }else{
+      } else {
         props.navigation.navigate('Graph')
       }
     } else {
@@ -98,11 +102,7 @@ function HomeScreen(props) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text
-          style={{ fontFamily: "PopBold", fontSize: 20, paddingBottom: 10 }}
-        >
-          Sisagiz
-        </Text>
+        <Logo />
         <Text style={{ fontFamily: "PopMedium", fontSize: 15 }}>
           Selamat Datang
         </Text>
@@ -112,7 +112,46 @@ function HomeScreen(props) {
           ) : (<Text></Text>)}
         </Text>
       </View>
-      <View style={styles.banner}></View>
+
+      <View style={styles.banner}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <Text style={{ fontFamily: 'PopBold', margin: '5%', marginLeft: 40, fontSize: 15, color: '#7C5211' }}>
+            {User != null ? (
+              User.user.role != 'masyarakat' ? (
+                <Text>
+                  Bantu Cek Status Gizi.{'\n'}
+                  Masyarakat Yuk!.{'\n\n'}
+                </Text>
+              ) : (
+                <Text>
+                  Cek Status Gizi.{'\n'}
+                  Anak Anda Sekarang!.{'\n\n'}
+                </Text>
+
+              )
+            ) : (
+              <Text>
+                Cek Status Gizi.{'\n'}
+                Anak Anda Sekarang!.{'\n\n'}
+              </Text>
+            )}
+            <TouchableOpacity
+              style={{ backgroundColor: '#FFCE81', width: 150, borderRadius: 20 }}
+              onPress={() => {
+                if (User != null) {
+                  props.navigation.navigate(User.user.role != 'masyarakat' ? 'MeasurementPosyandu' : 'Graph');
+                } else {
+                  props.navigation.navigate("Login");
+                }
+              }}>
+              <Text style={{ textAlign: 'center', fontFamily: 'PopBold', fontSize: 15, margin: '5%', color: '#603802' }}>Cek Yuk</Text>
+            </TouchableOpacity>
+          </Text>
+
+          <Image source={require('../../assets/home.png')} style={{ alignSelf: 'flex-end' }} />
+        </View>
+
+      </View>
       <View style={styles.menuContainer}>
         <View>
           <Text style={styles.menuText}>Menu</Text>
@@ -121,36 +160,36 @@ function HomeScreen(props) {
               {User != null ?
                 (
                   <TouchableOpacity style={styles.menu1} onPress={Submit}>
-                    <Text>Menu 1</Text>
+                    <FontAwesome name="bar-chart" size={35} color="white" />
                   </TouchableOpacity>
 
                 ) :
                 (
                   <TouchableOpacity style={styles.menu1} onPress={Submit}>
-                    <Text>Menu 1</Text>
+                    <FontAwesome name="bar-chart" size={35} color="white" />
                   </TouchableOpacity>
                 )
               }
               <TouchableOpacity style={styles.menu2} onPress={() => {
                 props.navigation.navigate("MeasurementPage");
               }} >
-                <Text>Menu 1</Text>
+                <FontAwesome name="edit" size={35} color="white" />
               </TouchableOpacity>
-              {User != null? (
+              {User != null ? (
 
-              <TouchableOpacity style={styles.menu3} onPress={() => {
-                props.navigation.navigate(User.user.role != 'masyarakat' ?  'Graph' : 'Article');
-              }}>
-                <Text>Menu 1</Text>
-              </TouchableOpacity>
-              ): 
-              (
                 <TouchableOpacity style={styles.menu3} onPress={() => {
-                  props.navigation.navigate('Article');
+                  props.navigation.navigate(User.user.role != 'masyarakat' ? 'Graph' : 'Article');
                 }}>
-                  <Text>Menu 1</Text>
+                  <FontAwesome name="book" size={35} color="white" />
                 </TouchableOpacity>
-              )}
+              ) :
+                (
+                  <TouchableOpacity style={styles.menu3} onPress={() => {
+                    props.navigation.navigate('Article');
+                  }}>
+                    <Text>Menu 1</Text>
+                  </TouchableOpacity>
+                )}
 
             </View>
             <View style={styles.menuTitle}>
@@ -166,15 +205,16 @@ function HomeScreen(props) {
 
                 )
 
+
               }
 
               <Text style={styles.menuTitle2}>Hitung Status Gizi</Text>
-              {User != null? (
+              {User != null ? (
 
                 <Text style={styles.menuTitle3}>{User.user.role !== 'masyarakat' ? 'Cek Status Gizi' : 'Artikel'}</Text>
-              ):(
+              ) : (
                 <Text style={styles.menuTitle3}>{'Artikel'}</Text>
-                
+
               )}
             </View>
           </View>
@@ -212,17 +252,18 @@ function HomeScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFCE81" },
-  header: { paddingTop: 60, paddingLeft: 20 },
+  container: { flex: 1, backgroundColor: "#FFCE81", top: -380 },
+  header: { paddingTop: 60, paddingLeft: 20, top: 10 },
   banner: {
     position: "absolute",
-    width: 320,
+    width: 340,
     height: 140,
     backgroundColor: "#FFEDD0",
-    top: 180,
+    top: 600,
     right: 37,
     zIndex: 1,
     borderRadius: 10,
+    marginRight: -10
   },
   menuContainer: {
     marginTop: 100,
@@ -316,7 +357,7 @@ const styles = StyleSheet.create({
     fontFamily: "PopBold",
     fontSize: 12,
     color: "black",
-  }
+  },
 });
 
 export default HomeScreen
