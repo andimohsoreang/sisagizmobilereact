@@ -249,21 +249,21 @@ function HomeScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFCE81", top: -350 },
-  header: { paddingTop: 60, paddingLeft: 20, top: -5 },
+  container: { flex: 1, backgroundColor: "#FFCE81"},
+  header: { paddingLeft: 20, top: -300 },
   banner: {
     position: "absolute",
     width: 340,
     height: 140,
     backgroundColor: "#FFEDD0",
-    top: 580,
+    top: 230,
     right: 37,
     zIndex: 1,
     borderRadius: 10,
     marginRight: -10
   },
   menuContainer: {
-    marginTop: 100,
+    marginTop: -180,
     borderRadius: 30,
     height: "70%",
     width: "100%",
