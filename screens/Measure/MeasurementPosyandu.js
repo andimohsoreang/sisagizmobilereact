@@ -55,6 +55,7 @@ export default function MeasurementPosyandu(props) {
     fetchData();
   }, []);
   const Submit = async () => {
+    if(age !== 0 || bb != 0 || tb != 0){
     try {
       const data = await _retrieve_data('data');
       const result = await post_measurment(data.jwt.token, {
@@ -76,12 +77,14 @@ export default function MeasurementPosyandu(props) {
           props.navigation.navigate('MeasureRes')
         })
       } else {
-        console.log(result);
-        alert(result.message);
+        alert('Pengukuran Telah Dilakukan');
       }
     } catch (err) {
-      alert(err);
+      alert('Pengukuran Telah Dilakukan');
     }
+  }else{
+    alert('Periksa Data Yang Dimasukan')
+  }
   }
 
   const dropIcon = () =>{
