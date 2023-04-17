@@ -13,6 +13,7 @@ import { get_growthBy_uuid, get_posyandu, user_measurmet } from '../api/all_api'
 import SelectDropdown from 'react-native-select-dropdown';
 import { useFonts } from 'expo-font';
 import { Feather } from "@expo/vector-icons";
+import { useNavigationState } from '@react-navigation/native';
 
 export default function Graph(props) {
     const [color, setColor] = React.useState(['#FFCE81', 'gray', 'gray'])
@@ -30,7 +31,8 @@ export default function Graph(props) {
     const [uuid, setuuid] = React.useState('')
     const [growth_data, setData] = React.useState([])
     const [year, setYear] = React.useState(null)
-
+    const navigationState = useNavigationState(state=>state)
+    const current = navigationState.index
     const [month, setMonth] = React.useState(null)
     const [currentMonth, setCurrentMonth] = React.useState(null)
 
@@ -53,8 +55,10 @@ export default function Graph(props) {
             }
             setRiwayat(data_riwayat)
         }
-        fetchData();
-    }, []);
+        if(current ==2){
+            fetchData();
+        }
+    }, [current]);
     const [monthSubmit, setMonthSubmit] = React.useState(false)
     const get_report = async (uuid) => {
         let dt = []

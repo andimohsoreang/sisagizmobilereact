@@ -14,6 +14,7 @@ import { _store_data, _retrieve_data, _get_all_keys_data } from "../../backend/h
 import { get_posyandu } from "../../backend/api/all_api";
 import { post_measurment } from "../../backend/api/all_api";
 import { Entypo, FontAwesome, MaterialCommunityIcons,  } from '@expo/vector-icons';
+import { useNavigationState } from "@react-navigation/native";
 
 
 // Move the useFonts hook outside of the component function
@@ -43,7 +44,8 @@ export default function MeasurementPosyandu(props) {
   const [doSubmit, setDoSubmit] = React.useState(false)
   const [dataBayi, setDataBayi] = React.useState([])
   const [date, setDate] = React.useState(year + "-" + month + "-" + day)
-
+  const navigationState = useNavigationState(state => state)
+  const currentTab = navigationState.index
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -52,8 +54,10 @@ export default function MeasurementPosyandu(props) {
       const newDataBayi = data.result.filter((value) => value.Posyandu.uuid === data_user.user.posyandu_uuid);
       setDataBayi(newDataBayi);
     }
-    fetchData();
-  }, []);
+    if( currentTab === 1){
+      fetchData();
+    }
+  }, [currentTab]);
   const Submit = async () => {
     if(age !== 0 || bb != 0 || tb != 0){
     try {
