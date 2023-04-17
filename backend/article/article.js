@@ -53,7 +53,12 @@ export default function Article(props) {
               }
             }
           })
-          setArticleData(new_article.reverse());
+          if( new_article.length != 0){
+            setArticleData(new_article.reverse());
+          }else{
+            alert('Data Tidak Ditemukan')
+            setArticleData(null)
+          }
         } else {
           console.log("Error fetching data");
         }
