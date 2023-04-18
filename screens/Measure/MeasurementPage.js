@@ -21,21 +21,21 @@ const fontConfig = {
   PopSemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
 };
 
-const dropIcon = () =>{
-  return(
+const dropIcon = () => {
+  return (
     <Feather name="arrow-down-circle" size={25} color="black" />
   )
 }
 
 export default function MeasurementPage(props) {
   const [AGE, setAge] = React.useState(0)
-    const [BB, setBB] = React.useState(0)
-    const [TB, setTB] = React.useState(0)
-    const [JK, setJK] = React.useState('L')
+  const [BB, setBB] = React.useState(0)
+  const [TB, setTB] = React.useState(0)
+  const [JK, setJK] = React.useState('L')
 
   // Call the useFonts hook outside of the component function
   const [fontsLoaded] = useFonts(fontConfig);
-  
+
   if (!fontsLoaded) return null;
 
   return (
@@ -56,10 +56,10 @@ export default function MeasurementPage(props) {
           <Text style={styles.textTitle}>Umur</Text>
           <View style={{ flexDirection: "row" }}>
             <TextInput style={styles.textInput}
-            keyboardType='numeric'
-            placeholder='Umur'
-            onChangeText={setAge}
-            value={String(AGE)} />
+              keyboardType='numeric'
+              placeholder='Umur'
+              onChangeText={setAge}
+              value={String(AGE)} />
             <Text style={styles.textSatuan}>Bulan</Text>
           </View>
           <View></View>
@@ -70,19 +70,19 @@ export default function MeasurementPage(props) {
           <Text style={styles.textTitle}>Berat Badan</Text>
           <View style={{ flexDirection: "row" }}>
             <TextInput style={styles.textInput}
-            keyboardType='numeric'
-            placeholder='Berat Badan'
-            onChangeText={setBB}
-            value={String(BB)} />
+              keyboardType='numeric'
+              placeholder='Berat Badan'
+              onChangeText={setBB}
+              value={String(BB)} />
             <Text style={styles.textSatuan}>Kg</Text>
           </View>
         </View>
 
-        
+
         <View style={styles.tinggiBadan}>
           <Text style={styles.textTitle}>Tinggi Badan</Text>
           <View style={{ flexDirection: "row" }}>
-            <TextInput style={styles.textInput} 
+            <TextInput style={styles.textInput}
               keyboardType='numeric'
               placeholder='Tinggi Badan'
               onChangeText={setTB}
@@ -96,35 +96,40 @@ export default function MeasurementPage(props) {
         <View style={styles.tinggiBadan}>
           <Text style={styles.textTitle}>Jenis Kelamin</Text>
           <View style={{ flexDirection: "row" }}>
-          <SelectDropdown 
-          buttonStyle={{borderRadius: 20}}
-          dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
-          rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
-          selectedRowTextStyle={{ color: 'white' }}
-          selectedRowStyle={{ backgroundColor: '#FFCE81' }}
-          renderDropdownIcon={dropIcon}
-                defaultValueByIndex={0}
-                data={['Laki-laki', 'Perempuan']}
-                onSelect={(selectedItem, index) => {
-                    setJK(index == 0? ('L') : ('P'))
-                }}
+            <SelectDropdown
+              buttonStyle={{ borderRadius: 20 }}
+              dropdownStyle={{ borderRadius: 20, fontFamily: 'PopBold' }}
+              rowTextStyle={{ fontFamily: 'PopMedium', fontSize: 15 }}
+              selectedRowTextStyle={{ color: 'white' }}
+              selectedRowStyle={{ backgroundColor: '#FFCE81' }}
+              renderDropdownIcon={dropIcon}
+              defaultValueByIndex={0}
+              data={['Laki-laki', 'Perempuan']}
+              onSelect={(selectedItem, index) => {
+                setJK(index == 0 ? ('L') : ('P'))
+              }}
             />
           </View>
         </View>
 
 
-        <TouchableOpacity onPress={()=>{
-          if(AGE != 0 && BB !== 0 && TB != 0){
-          _store_data('calc', {
-            age: AGE,
-            tb : TB,
-            bb: BB,
-            jk: JK
-          })
-          props.navigation.navigate("CalcRes")
-        }else{
-          alert('Mohon Perhatikan Data Yang Diisi')
-        }
+        <TouchableOpacity onPress={() => {
+          if (AGE != 0 && BB !== 0 && TB != 0) {
+            if (!AGE.includes(',') && !BB.includes(',') && !TB.includes(',')) {
+              _store_data('calc', {
+                age: AGE,
+                tb: TB,
+                bb: BB,
+                jk: JK
+              })
+              props.navigation.navigate("CalcRes")
+            } else {
+              alert('Mohon Gunakan (.) daripada (,)')
+
+            }
+          } else {
+            alert('Mohon Perhatikan Data Yang Diisi')
+          }
         }}>
           <View style={styles.btn}>
             <Text style={{ fontFamily: "PopBold", color: "black" }}>

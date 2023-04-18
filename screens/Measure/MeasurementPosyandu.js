@@ -60,32 +60,36 @@ export default function MeasurementPosyandu(props) {
   }, [currentTab]);
   const Submit = async () => {
     if(age !== 0 || bb != 0 || tb != 0){
-    try {
-      const data = await _retrieve_data('data');
-      const result = await post_measurment(data.jwt.token, {
-        uuid: uuid,
-        date: date,
-        age: Number(age),
-        bb: Number(bb),
-        tb: Number(tb),
-        vitamin: vitamin,
-        lila: Number(lila),
-        lika: Number(lika),
-      });
-      if (result.status === 201) {
-        await _store_data('pengukuran', {
-          uuid: uuid,
-          date: date
-        }).then((result) => {
-          alert('Pengukuran Berhasil')
-          props.navigation.navigate('MeasureRes')
-        })
-      } else {
-        alert('Pengukuran Telah Dilakukan');
+      if(!age.includes(',') && !bb.includes(',') && !tb.includes(',')){
+        try {
+          const data = await _retrieve_data('data');
+          const result = await post_measurment(data.jwt.token, {
+            uuid: uuid,
+            date: date,
+            age: Number(age),
+            bb: Number(bb),
+            tb: Number(tb),
+            vitamin: vitamin,
+            lila: Number(lila),
+            lika: Number(lika),
+          });
+          if (result.status === 201) {
+            await _store_data('pengukuran', {
+              uuid: uuid,
+              date: date
+            }).then((result) => {
+              alert('Pengukuran Berhasil')
+              props.navigation.navigate('MeasureRes')
+            })
+          } else {
+            alert('Pengukuran Telah Dilakukan');
+          }
+        } catch (err) {
+          alert('Pengukuran Telah Dilakukan');
+        }
+      }else{
+        alert('Mohon Gunakan (.) daripada (,)')
       }
-    } catch (err) {
-      alert('Pengukuran Telah Dilakukan');
-    }
   }else{
     alert('Periksa Data Yang Dimasukan')
   }
