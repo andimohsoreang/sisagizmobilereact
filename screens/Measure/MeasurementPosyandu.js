@@ -59,16 +59,15 @@ export default function MeasurementPosyandu(props) {
     }
   }, [currentTab]);
   const Submit = async () => {
-    if(age !== 0 || bb != 0 || tb != 0){
-      if(!age.includes(',') && !bb.includes(',') && !tb.includes(',')){
+    if(bb != 0 || tb != 0){
+      if(!bb.includes(',') && !tb.includes(',')){
         try {
           const data = await _retrieve_data('data');
           const result = await post_measurment(data.jwt.token, {
             uuid: uuid,
             date: date,
-            age: Number(age),
             bb: Number(bb),
-            tb: Number(tb),
+            tb: Math.round(Number(tb) * 2) / 2,
             vitamin: vitamin,
             lila: Number(lila),
             lika: Number(lika),
@@ -140,17 +139,6 @@ export default function MeasurementPosyandu(props) {
                     editable={false}
                   />
                 </View>
-              </View>
-            </View>
-            <View style={styles.umur}>
-              <Text style={styles.textTitle}>Umur</Text>
-              <View style={{ flexDirection: "row" }}>
-                <TextInput style={styles.textInputUmur}
-                  keyboardType='numeric'
-                  placeholder='Umur'
-                  onChangeText={setAge}
-                  value={String(age)} />
-                <Text style={styles.sideTxt}>Bulan</Text>
               </View>
             </View>
             <View style={styles.umur}>
