@@ -67,7 +67,7 @@ export default function MeasurementPosyandu(props) {
             uuid: uuid,
             date: date,
             bb: Number(bb),
-            tb: Math.round(Number(tb) * 2) / 2,
+            tb: Math.round(Number(tb) * 2) / 2 + 0.5,
             vitamin: vitamin,
             lila: Number(lila),
             lika: Number(lika),
@@ -81,6 +81,7 @@ export default function MeasurementPosyandu(props) {
               props.navigation.navigate('MeasureRes')
             })
           } else {
+            console.log(result.message);
             alert('Pengukuran Telah Dilakukan');
           }
         } catch (err) {
